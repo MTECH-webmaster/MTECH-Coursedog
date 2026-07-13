@@ -37,7 +37,27 @@ Class MTECH_Coursedog {
     }
 
     public function init() {
-        // Init
+        add_action('admin_menu', array($this, 'add_admin_menu'));
+    }
+
+    public function add_admin_menu() {
+        add_options_page(
+            'MTECH Coursedog',
+            'Coursedog API',
+            'manage_options',
+            'coursedog-api',
+            array($this, 'display_settings_page')
+        );
+    }
+
+    public function display_settings_page() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        ?>
+        <p>Hello</p>
+        <?php>
     }
 
 }
