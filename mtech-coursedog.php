@@ -57,18 +57,20 @@ Class MTECH_Coursedog {
 
         ?>
         <p>Hello</p>
-        <?php>
+        <?php
     }
-
-    register_activation_hook(__FILE__, array('Coursedog_API', 'activate_plugin'));
-    register_deactivation_hook(__FILE__, array('Coursedog_API', 'deactivate_plugin'));
-
-    // Initialize the plugin
-    function coursedog_api_init() {
-        return Coursedog_API::get_instance();
-    }
-
-    // Start the plugin
-    $coursedog_api = coursedog_api_init();
 
 }
+
+//////////////////////
+
+register_activation_hook(__FILE__, array('Coursedog_API', 'activate_plugin'));
+register_deactivation_hook(__FILE__, array('Coursedog_API', 'deactivate_plugin'));
+
+// Initialize the plugin
+function coursedog_api_init() {
+    return Coursedog_API::get_instance();
+}
+
+// Start the plugin
+$coursedog_api = coursedog_api_init();
