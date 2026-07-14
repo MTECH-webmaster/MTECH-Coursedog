@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/admin-dashboard/dashboard.php';
+require_once __DIR__ . '/includes/database.php';
 
 class MTECH_Coursedog {
 
@@ -31,7 +32,7 @@ class MTECH_Coursedog {
     }
 
     public static function activate_plugin() {
-        // Items for activation
+        mtech_coursedog_create_tables(); // from database.php
     }
 
     public static function deactivate_plugin() {
