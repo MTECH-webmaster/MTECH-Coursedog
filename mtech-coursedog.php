@@ -12,7 +12,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-Class MTECH_Coursedog {
+require_once __DIR__ . '/admin-dashboard/dashboard.php';
+
+class MTECH_Coursedog {
 
     private static $instance = null;
 
@@ -33,7 +35,7 @@ Class MTECH_Coursedog {
     }
 
     public static function deactivate_plugin() {
-        // Items for deactivation
+        // Items for deactivation goes here
     }
 
     public function init() {
@@ -43,34 +45,24 @@ Class MTECH_Coursedog {
     public function add_admin_menu() {
         add_options_page(
             'MTECH Coursedog',
-            'Coursedog API',
+            'MTECH Coursedog',
             'manage_options',
-            'coursedog-api',
-            array($this, 'display_settings_page')
+            'mtech-coursedog',
+            'display_admin_dashboard' // from dashboard.php
         );
     }
 
-    public function display_settings_page() {
-        if (!current_user_can('manage_options')) {
-            return;
-        }
-
-        ?>
-        <p>Hello</p>
-        <?php
-    }
-
 }
 
-//////////////////////
+///////////// End of class /////////////
 
-register_activation_hook(__FILE__, array('Coursedog_API', 'activate_plugin'));
-register_deactivation_hook(__FILE__, array('Coursedog_API', 'deactivate_plugin'));
+register_activation_hook(__FILE__, array('MTECH_Coursedog', 'activate_plugin'));
+register_deactivation_hook(__FILE__, array('MTECH_Coursedog', 'deactivate_plugin'));
 
 // Initialize the plugin
-function coursedog_api_init() {
-    return Coursedog_API::get_instance();
+function mtech_coursedog_init() {
+    return MTECH_Coursedog::get_instance();
 }
 
 // Start the plugin
-$coursedog_api = coursedog_api_init();
+$mtech_coursedog = mtech_coursedog_init();
