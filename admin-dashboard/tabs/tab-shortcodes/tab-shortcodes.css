@@ -1,6 +1,36 @@
+#mtech-coursedog-tree,
+#mtech-coursedog-tree ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
 
+#mtech-coursedog-tree ul.mtech-nested {
+    padding-left: 20px;
+}
 
-.paragraph-1 {
-    color: blue;
-    font-weight: 700 !important;
+.mtech-caret {
+    cursor: pointer;
+    user-select: none;
+    display: inline-block;
+}
+
+.mtech-caret::before {
+    content: "+";
+    display: inline-block;
+    width: 1em;
+    margin-right: 6px;
+    font-weight: bold;
+}
+
+.mtech-caret-open::before {
+    content: "\2212"; /* minus sign */
+}
+
+.mtech-nested {
+    display: none;
+}
+
+.mtech-nested.mtech-active {
+    display: block;
 }
