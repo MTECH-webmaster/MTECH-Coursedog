@@ -43,4 +43,83 @@ function mtech_coursedog_create_tables() {
     ) $charset_collate;";
     dbDelta( $sql_shortcodes );
 
+    mtech_coursedog_seed_schools();
+    mtech_coursedog_seed_programs();
+}
+
+function mtech_coursedog_seed_schools() {
+    global $wpdb;
+    $table_schools = $wpdb->prefix . 'mtech_coursedog_schools';
+
+    $schools = array(
+        'Apprenticeships',
+        'Healthcare',
+        'Services',
+        'Technology',
+        'Trades',
+    );
+
+    foreach ($schools as $school_name) {
+        $exists = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM $table_schools WHERE name = %s",
+                $school_name
+            )
+        );
+
+        if (!$exists) {
+            $wpdb->insert(
+                $table_schools,
+                array('name' => $school_name),
+                array('%s')
+            );
+        }
+    }
+}
+
+function mtech_coursedog_seed_programs() {
+    global $wpdb;
+    $table_schools = $wpdb->prefix . 'mtech_coursedog_schools';
+    $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
+
+    $programs = array(
+        'Electrical Apprenticeship' => 'Apprenticeships',
+        'Advanced EMT'              => 'Healthcare',
+        'Artisan Baking'            => 'Services',
+        'Data Technology'           => 'Technology',
+        'Automation Technology'     => 'Trades',
+    );
+
+    foreach ($programs as $program_name => $school_name) {
+        $school_id = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM $table_schools WHERE name = %s",
+                $school_name
+            )
+        );
+
+        if (!$school_id) {
+            // School not found — skip rather than insert a broken reference
+            continue;
+        }
+
+        $exists = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT id FROM $table_programs WHERE name = %s AND school_id = %d",
+                $program_name,
+                $school_id
+            )
+        );
+
+        if (!$exists) {
+            $wpdb->insert(
+                $table_programs,
+                array(
+                    'name'      => $program_name,
+                    'school_id' => $school_id,
+                ),
+                array('%s', '%d')
+            );
+        }
+    }
 }

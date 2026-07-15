@@ -32,6 +32,7 @@ class MTECH_Coursedog {
     }
 
     public static function activate_plugin() {
+        error_log('MTECH Coursedog: activate_plugin() called');
         mtech_coursedog_create_tables(); // from database.php
     }
 
