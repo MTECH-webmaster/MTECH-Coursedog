@@ -29,4 +29,18 @@ function mtech_coursedog_create_tables() {
     ) $charset_collate;";
     dbDelta( $sql_programs );
 
+    $table_shortcode_items = $wpdb->prefix . 'mtech_coursedog_shortcodes';
+    $sql_shortcodes = "CREATE TABLE $table_shortcode_items (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        program_id mediumint(9) NOT NULL,
+        name varchar(255) NOT NULL,
+        field varchar(255) NOT NULL,
+        type varchar(255) NOT NULL,
+        search tinyint(1) NOT NULL DEFAULT 0,
+        PRIMARY KEY  (id),
+        UNIQUE KEY name (name),
+        KEY program_id (program_id)
+    ) $charset_collate;";
+    dbDelta( $sql_shortcodes );
+
 }
