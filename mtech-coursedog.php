@@ -14,6 +14,7 @@ if (!defined('ABSPATH')) {
 
 require_once __DIR__ . '/admin-dashboard/dashboard.php';
 require_once __DIR__ . '/includes/database.php';
+require_once __DIR__ . '/includes/form-handlers.php';
 
 class MTECH_Coursedog {
 

@@ -32,6 +32,14 @@ function mtech_coursedog_enqueue_dashboard_script($hook) {
         array(),
         '1.0'
     );
+
+    wp_enqueue_script(
+        'mtech-coursedog-tab-shortcodes',
+        plugin_dir_url(__FILE__) . 'tabs/tab-shortcodes/tab-shortcodes.js',
+        array(),
+        '1.0',
+        true
+    );
 }
 add_action('admin_enqueue_scripts', 'mtech_coursedog_enqueue_dashboard_script');
 
