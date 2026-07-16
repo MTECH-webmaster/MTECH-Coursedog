@@ -30,7 +30,8 @@ function mtech_coursedog_enqueue_dashboard_script($hook) {
         'mtech-coursedog-tab-shortcodes',
         plugin_dir_url(__FILE__) . 'tabs/tab-shortcodes/tab-shortcodes.css',
         array(),
-        '1.0'
+        filemtime(__DIR__ . '/tabs/tab-shortcodes/tab-shortcodes.css'),
+        // changed from '1.0' to filetime so that old versions don't get cached.
     );
 
     wp_enqueue_script(
