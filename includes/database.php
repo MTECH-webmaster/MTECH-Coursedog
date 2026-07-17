@@ -24,21 +24,28 @@ function mtech_coursedog_create_tables() {
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         school_id mediumint(9) NOT NULL,
         name varchar(255) NOT NULL,
+        coursedog_program_id varchar(255) DEFAULT NULL,
         PRIMARY KEY  (id),
         KEY school_id (school_id)
     ) $charset_collate;";
     dbDelta( $sql_programs );
 
+
+    // id: unique key for shortcode record
+    // program_id: references mtech_coursedog_programs.id
+    // type: e.g. "cost", "registration", "default", "prereqs"
+    // field: field key from the Coursedog API response, e.g. "Wx9fb"
     $table_shortcode_items = $wpdb->prefix . 'mtech_coursedog_shortcodes';
     $sql_shortcodes = "CREATE TABLE $table_shortcode_items (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         program_id mediumint(9) NOT NULL,
-        name varchar(255) NOT NULL,
-        field varchar(255) NOT NULL,
         type varchar(255) NOT NULL,
+        field varchar(255) NOT NULL,
         search tinyint(1) NOT NULL DEFAULT 0,
+        search_query varchar(255),
+        effective_dates_range varchar(255),
         PRIMARY KEY  (id),
-        UNIQUE KEY name (name),
+        UNIQUE KEY program_type (program_id, type),
         KEY program_id (program_id)
     ) $charset_collate;";
     dbDelta( $sql_shortcodes );
