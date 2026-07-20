@@ -48,7 +48,7 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
 
                                 <p>
                                     <label>
-                                        Name<br>
+                                        Name (test)<br>
                                         <input type="text" name="name" value="<?php echo esc_attr($name_val); ?>">
                                     </label>
                                 </p>
