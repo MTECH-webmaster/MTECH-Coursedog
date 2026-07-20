@@ -5,8 +5,9 @@ if (!defined('ABSPATH')) {
 }
 
 global $wpdb;
-$table_schools  = $wpdb->prefix . 'mtech_coursedog_schools';
-$table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
+$table_schools    = $wpdb->prefix . 'mtech_coursedog_schools';
+$table_programs   = $wpdb->prefix . 'mtech_coursedog_programs';
+$table_shortcodes = $wpdb->prefix . 'mtech_coursedog_shortcodes';
 
 $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name ASC");
 ?>
@@ -14,6 +15,10 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
 
 <?php if (isset($_GET['mtech_saved']) && $_GET['mtech_saved'] === '1') : ?>
     <div class="notice notice-success is-dismissible"><p>Shortcode values saved.</p></div>
+<?php endif; ?>
+
+<?php if (isset($_GET['mtech_deleted']) && $_GET['mtech_deleted'] === '1') : ?>
+    <div class="notice notice-success is-dismissible"><p>Shortcode deleted.</p></div>
 <?php endif; ?>
 
 <ul id="mtech-coursedog-tree">
@@ -29,49 +34,113 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
         <span class="mtech-caret" data-type="school"><?php echo esc_html($school->name); ?></span>
         <ul class="mtech-nested">
             <?php foreach ($programs as $program) :
-                $option_key = 'mtech_coursedog_shortcode_' . $program->id;
-                $saved = get_option($option_key, array());
-
-                $name_val   = isset($saved['name']) ? $saved['name'] : '';
-                $field_val  = isset($saved['field']) ? $saved['field'] : '';
-                $type_val   = isset($saved['type']) ? $saved['type'] : '';
-                $search_val = !empty($saved['search']);
+                $shortcode_rows = $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT id, type, field, search, search_query, effective_dates_range
+                         FROM $table_shortcodes
+                         WHERE program_id = %d
+                         ORDER BY type ASC",
+                        $program->id
+                    )
+                );
             ?>
                 <li>
                     <span class="mtech-caret" data-type="program"><?php echo esc_html($program->name); ?></span>
                     <ul class="mtech-nested">
-                        <li>
-                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form">
+                        <?php foreach ($shortcode_rows as $shortcode) : ?>
+                            <li>
+                                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form">
+                                    <input type="hidden" name="action" value="mtech_coursedog_save_shortcode">
+                                    <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
+                                    <input type="hidden" name="shortcode_id" value="<?php echo esc_attr($shortcode->id); ?>">
+                                    <?php wp_nonce_field('mtech_coursedog_save_shortcode_' . $program->id, 'mtech_coursedog_nonce'); ?>
+                                    <p>
+                                        <label>
+                                            Type<br>
+                                            <input type="text" name="type" value="<?php echo esc_attr($shortcode->type); ?>">
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            Field<br>
+                                            <input type="text" name="field" value="<?php echo esc_attr($shortcode->field); ?>">
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            <input type="checkbox" name="search" value="1" <?php checked((bool) $shortcode->search, true); ?>>
+                                            Search
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            Search Query<br>
+                                            <input type="text" name="search_query" value="<?php echo esc_attr($shortcode->search_query); ?>">
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            Effective Dates Range<br>
+                                            <input type="text" name="effective_dates_range" value="<?php echo esc_attr($shortcode->effective_dates_range); ?>">
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <button type="submit" class="button button-primary">Save</button>
+                                    </p>
+                                </form>
+                                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form-delete" onsubmit="return confirm('Delete this shortcode? This cannot be undone.');">
+                                    <input type="hidden" name="action" value="mtech_coursedog_delete_shortcode">
+                                    <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
+                                    <input type="hidden" name="shortcode_id" value="<?php echo esc_attr($shortcode->id); ?>">
+                                    <?php wp_nonce_field('mtech_coursedog_delete_shortcode_' . $shortcode->id, 'mtech_coursedog_delete_nonce'); ?>
+                                    <p>
+                                        <button type="submit" class="button button-secondary">Delete</button>
+                                    </p>
+                                </form>
+                            </li>
+                        <?php endforeach; ?>
+
+                        <!-- Add new shortcode for this program -->
+                        <li class="li-new-shortcode-section">
+                            <p><strong>Add new shortcode</strong></p>
+                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form mtech-shortcode-form-new">
                                 <input type="hidden" name="action" value="mtech_coursedog_save_shortcode">
                                 <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
+                                <input type="hidden" name="shortcode_id" value="">
                                 <?php wp_nonce_field('mtech_coursedog_save_shortcode_' . $program->id, 'mtech_coursedog_nonce'); ?>
 
                                 <p>
                                     <label>
-                                        Name (test)<br>
-                                        <input type="text" name="name" value="<?php echo esc_attr($name_val); ?>">
+                                        Type<br>
+                                        <input type="text" name="type" value="">
                                     </label>
                                 </p>
                                 <p>
                                     <label>
                                         Field<br>
-                                        <input type="text" name="field" value="<?php echo esc_attr($field_val); ?>">
+                                        <input type="text" name="field" value="">
                                     </label>
                                 </p>
                                 <p>
                                     <label>
-                                        Type<br>
-                                        <input type="text" name="type" value="<?php echo esc_attr($type_val); ?>">
-                                    </label>
-                                </p>
-                                <p>
-                                    <label>
-                                        <input type="checkbox" name="search" value="1" <?php checked($search_val, true); ?>>
+                                        <input type="checkbox" name="search" value="1">
                                         Search
                                     </label>
                                 </p>
                                 <p>
-                                    <button type="submit" class="button button-primary">Save</button>
+                                    <label>
+                                        Search Query<br>
+                                        <input type="text" name="search_query" value="">
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        Effective Dates Range<br>
+                                        <input type="text" name="effective_dates_range" value="">
+                                    </label>
+                                </p>
+                                <p>
+                                    <button type="submit" class="button button-primary">Add Shortcode</button>
                                 </p>
                             </form>
                         </li>
