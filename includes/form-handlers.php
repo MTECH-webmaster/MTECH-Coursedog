@@ -120,3 +120,98 @@ function mtech_coursedog_delete_shortcode_handler() {
     exit;
 }
 add_action('admin_post_mtech_coursedog_delete_shortcode', 'mtech_coursedog_delete_shortcode_handler');
+
+function mtech_coursedog_add_program_handler() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized', 403);
+    }
+
+    $school_id = isset($_POST['school_id']) ? absint($_POST['school_id']) : 0;
+
+    if (!$school_id || !isset($_POST['mtech_coursedog_add_program_nonce']) ||
+        !wp_verify_nonce($_POST['mtech_coursedog_add_program_nonce'], 'mtech_coursedog_add_program_' . $school_id)) {
+        wp_die('Invalid request', 400);
+    }
+
+    global $wpdb;
+    $table_schools  = $wpdb->prefix . 'mtech_coursedog_schools';
+    $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
+
+    // Confirm the school actually exists before attaching a program to it
+    $school_exists = $wpdb->get_var(
+        $wpdb->prepare("SELECT id FROM $table_schools WHERE id = %d", $school_id)
+    );
+    if (!$school_exists) {
+        wp_die('Invalid school', 400);
+    }
+
+    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    if ($name === '') {
+        wp_die('Program name is required', 400);
+    }
+
+    $coursedog_program_id = isset($_POST['coursedog_program_id']) ? sanitize_text_field($_POST['coursedog_program_id']) : '';
+
+    $data = array(
+        'school_id' => $school_id,
+        'name'      => $name,
+        // Store NULL rather than an empty string when no Coursedog ID is given,
+        // so the column's UNIQUE-among-non-null behavior stays meaningful
+        'coursedog_program_id' => $coursedog_program_id !== '' ? $coursedog_program_id : null,
+    );
+    $formats = array('%d', '%s', $coursedog_program_id !== '' ? '%s' : null);
+
+    $result = $wpdb->insert($table_programs, $data, $formats);
+
+    if ($result === false) {
+        wp_die('Database error while adding program.', 500);
+    }
+
+    $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
+    $redirect = add_query_arg(
+        'mtech_program_added', '1',
+        remove_query_arg(array('mtech_saved', 'mtech_deleted', 'mtech_program_added', 'mtech_program_removed'), $redirect)
+    );
+
+    wp_safe_redirect($redirect);
+    exit;
+}
+add_action('admin_post_mtech_coursedog_add_program', 'mtech_coursedog_add_program_handler');
+
+function mtech_coursedog_remove_program_handler() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized', 403);
+    }
+
+    $program_id = isset($_POST['program_id']) ? absint($_POST['program_id']) : 0;
+
+    if (!$program_id || !isset($_POST['mtech_coursedog_remove_program_nonce']) ||
+        !wp_verify_nonce($_POST['mtech_coursedog_remove_program_nonce'], 'mtech_coursedog_remove_program_' . $program_id)) {
+        wp_die('Invalid request', 400);
+    }
+
+    global $wpdb;
+    $table_programs   = $wpdb->prefix . 'mtech_coursedog_programs';
+    $table_shortcodes = $wpdb->prefix . 'mtech_coursedog_shortcodes';
+
+    // Cascade: remove this program's shortcodes first, since there's no
+    // database-level foreign key to do this automatically. Without this step,
+    // deleting the program would leave orphaned shortcode rows behind.
+    $wpdb->delete($table_shortcodes, array('program_id' => $program_id), array('%d'));
+
+    $result = $wpdb->delete($table_programs, array('id' => $program_id), array('%d'));
+
+    if ($result === false) {
+        wp_die('Database error while removing program.', 500);
+    }
+
+    $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
+    $redirect = add_query_arg(
+        'mtech_program_removed', '1',
+        remove_query_arg(array('mtech_saved', 'mtech_deleted', 'mtech_program_added', 'mtech_program_removed'), $redirect)
+    );
+
+    wp_safe_redirect($redirect);
+    exit;
+}
+add_action('admin_post_mtech_coursedog_remove_program', 'mtech_coursedog_remove_program_handler');
