@@ -6,13 +6,39 @@
 }
 
 #mtech-coursedog-tree ul.mtech-nested {
-    padding-left: 20px;
+    padding-left: 22px;
+    border-left: 2px solid #e2e4e7;
+    margin-left: 6px;
+}
+
+/* School level */
+#mtech-coursedog-tree > li {
+    margin-bottom: 4px;
+}
+
+#mtech-coursedog-tree > li > .mtech-caret {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+/* Program level */
+#mtech-coursedog-tree > li > ul.mtech-nested > li > .mtech-caret {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2c3338;
 }
 
 .mtech-caret {
     cursor: pointer;
     user-select: none;
     display: inline-block;
+    padding: 6px 4px;
+    border-radius: 3px;
+}
+
+.mtech-caret:hover {
+    background: #f0f0f1;
 }
 
 .mtech-caret::before {
@@ -21,6 +47,7 @@
     width: 1em;
     margin-right: 6px;
     font-weight: bold;
+    color: #2271b1;
 }
 
 .mtech-caret-open::before {
@@ -33,4 +60,127 @@
 
 .mtech-nested.mtech-active {
     display: block;
+}
+
+/* Group each program's shortcode rows + add-new row in one visual card */
+#mtech-coursedog-tree > li > ul.mtech-nested > li > ul.mtech-nested {
+    background: #f9f9f9;
+    border: 1px solid #e2e4e7;
+    border-radius: 4px;
+    padding: 4px 16px;
+    margin: 6px 0 14px 0;
+}
+
+/* Each shortcode row: save form + delete form sit side by side */
+#mtech-coursedog-tree > li > ul.mtech-nested > li > ul.mtech-nested > li {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e2e4e7;
+}
+
+#mtech-coursedog-tree > li > ul.mtech-nested > li > ul.mtech-nested > li:last-child {
+    border-bottom: none;
+}
+
+.mtech-shortcode-form,
+.mtech-shortcode-form-new {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.mtech-shortcode-form p,
+.mtech-shortcode-form-new p {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.mtech-shortcode-form label,
+.mtech-shortcode-form-new label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #50575e;
+    margin-bottom: 4px;
+}
+
+/* Standard text inputs: consistent width so columns line up across rows */
+.mtech-shortcode-form input[type="text"],
+.mtech-shortcode-form-new input[type="text"] {
+    width: 140px;
+    height: 30px;
+    box-sizing: border-box;
+}
+
+/* Search checkbox needs its own wider container + room around the box itself */
+.mtech-shortcode-form p:has(input[type="checkbox"]),
+.mtech-shortcode-form-new p:has(input[type="checkbox"]) {
+    flex-direction: row;
+    align-items: center;
+    min-width: 90px;
+    height: 30px;
+}
+
+.mtech-shortcode-form input[type="checkbox"],
+.mtech-shortcode-form-new input[type="checkbox"] {
+    margin: 0 6px 0 0;
+    width: 18px;
+    height: 18px;
+}
+
+/* Buttons: match input height so they align on the same baseline */
+.mtech-shortcode-form .button,
+.mtech-shortcode-form-new .button,
+.mtech-shortcode-form-delete .button {
+    height: 30px;
+    line-height: 28px;
+    margin: 0;
+}
+
+/* Delete styled as a distinct, muted, destructive action — not a Save sibling */
+.mtech-shortcode-form-delete {
+    display: flex;
+    align-items: flex-end;
+}
+
+.mtech-shortcode-form-delete p {
+    margin: 0;
+}
+
+.mtech-shortcode-form-delete .button {
+    color: #b32d2e;
+    border-color: #b32d2e;
+    background: transparent;
+}
+
+.mtech-shortcode-form-delete .button:hover {
+    color: #fff;
+    background: #b32d2e;
+    border-color: #b32d2e;
+}
+
+/* Add-new row: label sits as a heading above its own field row */
+.li-new-shortcode-section {
+    flex-direction: column;
+    align-items: stretch !important;
+    padding-top: 16px !important;
+}
+
+.li-new-shortcode-section > p:first-child {
+    margin-bottom: 10px;
+}
+
+.li-new-shortcode-section > p:first-child strong {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #787c82;
+    font-weight: 600;
+}
+
+.li-new-shortcode-section .mtech-shortcode-form-new {
+    width: 100%;
 }
