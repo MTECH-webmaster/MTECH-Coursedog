@@ -49,6 +49,7 @@ function mtech_coursedog_create_tables() {
         KEY program_id (program_id)
     ) $charset_collate;";
     dbDelta( $sql_shortcodes );
+    // test
 
     mtech_coursedog_seed_schools();
     mtech_coursedog_seed_programs();
