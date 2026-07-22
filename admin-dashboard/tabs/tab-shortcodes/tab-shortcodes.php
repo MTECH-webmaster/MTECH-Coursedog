@@ -3,29 +3,30 @@
 if (!defined('ABSPATH')) {
     exit;
 }
-
 global $wpdb;
 $table_schools    = $wpdb->prefix . 'mtech_coursedog_schools';
 $table_programs   = $wpdb->prefix . 'mtech_coursedog_programs';
 $table_shortcodes = $wpdb->prefix . 'mtech_coursedog_shortcodes';
-
 $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name ASC");
 ?>
 <h2>Shortcodes</h2>
-
 <?php if (isset($_GET['mtech_saved']) && $_GET['mtech_saved'] === '1') : ?>
     <div class="notice notice-success is-dismissible"><p>Shortcode values saved.</p></div>
 <?php endif; ?>
-
 <?php if (isset($_GET['mtech_deleted']) && $_GET['mtech_deleted'] === '1') : ?>
     <div class="notice notice-success is-dismissible"><p>Shortcode deleted.</p></div>
 <?php endif; ?>
-
+<?php if (isset($_GET['mtech_program_added']) && $_GET['mtech_program_added'] === '1') : ?>
+    <div class="notice notice-success is-dismissible"><p>Program added.</p></div>
+<?php endif; ?>
+<?php if (isset($_GET['mtech_program_removed']) && $_GET['mtech_program_removed'] === '1') : ?>
+    <div class="notice notice-success is-dismissible"><p>Program removed.</p></div>
+<?php endif; ?>
 <ul id="mtech-coursedog-tree">
 <?php foreach ($schools as $school) :
     $programs = $wpdb->get_results(
         $wpdb->prepare(
-            "SELECT id, name FROM $table_programs WHERE school_id = %d ORDER BY name ASC",
+            "SELECT id, name, coursedog_program_id FROM $table_programs WHERE school_id = %d ORDER BY name ASC",
             $school->id
         )
     );
@@ -45,7 +46,15 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                 );
             ?>
                 <li>
-                    <span class="mtech-caret" data-type="program"><?php echo esc_html($program->name); ?></span>
+                    <div class="mtech-program-row">
+                        <span class="mtech-caret" data-type="program"><?php echo esc_html($program->name); ?></span>
+                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-program-form-delete" onsubmit="return confirm('Remove this program? All of its shortcodes will also be deleted. This cannot be undone.');">
+                            <input type="hidden" name="action" value="mtech_coursedog_remove_program">
+                            <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
+                            <?php wp_nonce_field('mtech_coursedog_remove_program_' . $program->id, 'mtech_coursedog_remove_program_nonce'); ?>
+                            <button type="submit" class="button-link mtech-remove-program-link">Remove Program</button>
+                        </form>
+                    </div>
                     <ul class="mtech-nested">
                         <?php foreach ($shortcode_rows as $shortcode) : ?>
                             <li>
@@ -99,7 +108,6 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 </form>
                             </li>
                         <?php endforeach; ?>
-
                         <!-- Add new shortcode for this program -->
                         <li class="li-new-shortcode-section">
                             <p><strong>Add new shortcode</strong></p>
@@ -108,7 +116,6 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
                                 <input type="hidden" name="shortcode_id" value="">
                                 <?php wp_nonce_field('mtech_coursedog_save_shortcode_' . $program->id, 'mtech_coursedog_nonce'); ?>
-
                                 <p>
                                     <label>
                                         Type<br>
@@ -147,6 +154,30 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                     </ul>
                 </li>
             <?php endforeach; ?>
+            <!-- Add new program for this school -->
+            <li class="li-new-program-section">
+                <p><strong>Add new program</strong></p>
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-program-form-new">
+                    <input type="hidden" name="action" value="mtech_coursedog_add_program">
+                    <input type="hidden" name="school_id" value="<?php echo esc_attr($school->id); ?>">
+                    <?php wp_nonce_field('mtech_coursedog_add_program_' . $school->id, 'mtech_coursedog_add_program_nonce'); ?>
+                    <p>
+                        <label>
+                            Program Name<br>
+                            <input type="text" name="name" value="" required>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Coursedog Program ID <span class="mtech-optional">(optional)</span><br>
+                            <input type="text" name="coursedog_program_id" value="">
+                        </label>
+                    </p>
+                    <p>
+                        <button type="submit" class="button button-primary">Add Program</button>
+                    </p>
+                </form>
+            </li>
         </ul>
     </li>
 <?php endforeach; ?>
