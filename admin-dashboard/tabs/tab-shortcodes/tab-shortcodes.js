@@ -3,7 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     togglers.forEach(function (toggler) {
         toggler.addEventListener('click', function () {
-            var nested = this.parentElement.querySelector(':scope > .mtech-nested');
+            var listItem = this.closest('li');
+            if (!listItem) return;
+
+            var nested = listItem.querySelector(':scope > .mtech-nested');
             if (nested) {
                 nested.classList.toggle('mtech-active');
                 this.classList.toggle('mtech-caret-open');
