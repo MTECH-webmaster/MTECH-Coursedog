@@ -21,6 +21,11 @@ function mtech_coursedog_shortcode_handler($atts) {
         return '';
     }
 
+    if (1 == 1) {
+        $error = mtech_coursedog_error('shortcod_error_1', 'Test error message description');
+        return '-';
+    }
+
     // Future logic goes here: check transient, fall back to wp_options,
     // query Coursedog API, format, cache, return value.
 

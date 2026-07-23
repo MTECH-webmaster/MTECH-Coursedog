@@ -1,0 +1,48 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+function mtech_coursedog_log($message, $level = 'error') {
+    if (!in_array($level, array('error', 'warning', 'info'), true)) {
+        $level = 'error';
+    }
+
+    $log_dir = WP_CONTENT_DIR . '/mtech-coursedog-logs';
+    if (!file_exists($log_dir)) {
+        wp_mkdir_p($log_dir);
+        // Blocks direct web access to the whole folder
+        file_put_contents($log_dir . '/.htaccess', "Deny from all\n");
+        file_put_contents($log_dir . '/index.php', "<?php // Silence is golden\n");
+    }
+
+    $log_file = $log_dir . '/mtech-coursedog.log';
+    $timestamp = current_time('mysql');
+    $line = sprintf("[%s] [%s] %s\n", $timestamp, strtoupper($level), $message);
+
+    error_log($line, 3, $log_file);
+}
+
+function mtech_coursedog_error($code, $message, $log_message = null) {
+    mtech_coursedog_log($log_message ?: $message, 'error');
+    return new \WP_Error($code, $message);
+}
+
+// // Noting here some potential solutions for future error handling:
+// $error = mtech_coursedog_error('shortcod_error_1', 'Test error message description');
+
+// // Option #1
+// $token = mtech_coursedog_get_api_token_from_db();
+// if (is_wp_error($token)) {
+//     mtech_coursedog_log($token->get_error_message());
+//     return ''; // fail silently — no need to inspect $token further here
+// }
+
+// // Option #2
+// $token = mtech_coursedog_get_api_token_from_db();
+// if (is_wp_error($token)) {
+//     if ($token->get_error_code() === 'get_api_token_from_db__error_1') {
+//         // specific handling for "no token found" vs. other decrypt failures
+//     }
+//     return '';
+// }
