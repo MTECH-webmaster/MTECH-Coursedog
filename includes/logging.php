@@ -31,14 +31,20 @@ function mtech_coursedog_error($code, $message, $log_message = null) {
 // // Noting here some potential solutions for future error handling:
 // $error = mtech_coursedog_error('shortcod_error_1', 'Test error message description');
 
-// // Option #1
+// // Option #1 (shortcode example)
+// if (1 == 1) {
+//     $error = mtech_coursedog_error('shortcod_error_1', 'Test error message description');
+//     return '-';
+// }
+
+// // Option #2
 // $token = mtech_coursedog_get_api_token_from_db();
 // if (is_wp_error($token)) {
 //     mtech_coursedog_log($token->get_error_message());
 //     return ''; // fail silently — no need to inspect $token further here
 // }
 
-// // Option #2
+// // Option #3
 // $token = mtech_coursedog_get_api_token_from_db();
 // if (is_wp_error($token)) {
 //     if ($token->get_error_code() === 'get_api_token_from_db__error_1') {
