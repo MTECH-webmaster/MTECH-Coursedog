@@ -62,7 +62,7 @@ function display_admin_dashboard() {
         <!-- Tab Content Sections -->
         <div class="tab-content-container">
             <div id="tab-general" class="tab-content active">
-                <?php require __DIR__ . '/tabs/tab-api.php'; ?>
+                <?php require __DIR__ . '/tabs/tab-api/tab-api.php'; ?>
             </div>
 
             <div id="tab-advanced" class="tab-content">
