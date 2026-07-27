@@ -17,6 +17,8 @@ require_once __DIR__ . '/includes/database.php';
 require_once __DIR__ . '/includes/form-handlers.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/logging.php';
+require_once __DIR__ . '/includes/encryption.php';
+require_once __DIR__ . '/includes/api.php';
 
 class MTECH_Coursedog {
 

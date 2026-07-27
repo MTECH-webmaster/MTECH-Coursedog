@@ -21,6 +21,12 @@ function mtech_coursedog_shortcode_handler($atts) {
         return '';
     }
 
+    $token = mtech_coursedog_get_api_token_from_db();
+    if (is_wp_error($token)) {
+        mtech_coursedog_log($token->get_error_message());
+        return '';
+    }
+
     // Future logic goes here: check transient, fall back to wp_options,
     // query Coursedog API, format, cache, return value.
 
