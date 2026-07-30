@@ -37,16 +37,21 @@ class MTECH_Coursedog {
     }
 
     public static function activate_plugin() {
-        error_log('MTECH Coursedog: activate_plugin() called');
         mtech_coursedog_create_tables(); // from database.php
+
+        if (!wp_next_scheduled('mtech_coursedog_cron_generate_api_token')) {
+            wp_schedule_event(time(), 'twicedaily', 'mtech_coursedog_cron_generate_api_token');
+        }
     }
 
     public static function deactivate_plugin() {
-        // Items for deactivation goes here
+        wp_clear_scheduled_hook('mtech_coursedog_cron_generate_api_token');
     }
 
     public function init() {
         add_action('admin_menu', array($this, 'add_admin_menu'));
+
+        add_action('mtech_coursedog_cron_generate_api_token', 'mtech_coursedog_run_scheduled_token_generation');
     }
 
     public function add_admin_menu() {

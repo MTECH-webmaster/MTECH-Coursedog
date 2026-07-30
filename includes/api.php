@@ -108,3 +108,21 @@ function mtech_coursedog_get_api_token_from_db() {
 
     return $token_plain; // intentionally, this could return a WP_Error from decrypt_data. Error handled one level up from this.
 }
+
+function mtech_coursedog_run_scheduled_token_generation() {
+    $result = mtech_coursedog_generate_api_token();
+
+    if (is_wp_error($result)) {
+        $consecutive_failures = (int) get_option('mtech_coursedog_token_failures', 0) + 1;
+        update_option('mtech_coursedog_token_failures', $consecutive_failures, false);
+
+        // After 2 consecutive failed attempts (1 full day), escalate beyond just the log
+        if ($consecutive_failures >= 2) {
+            mtech_coursedog_log('Token generation has failed ' . $consecutive_failures . ' consecutive times: ' . $result->get_error_message());
+            // Consider: wp_mail() to an admin address here, or a dashboard notice (see below)
+        }
+    } else {
+        // Reset the counter on success
+        update_option('mtech_coursedog_token_failures', 0, false);
+    }
+}
