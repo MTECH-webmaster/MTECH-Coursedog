@@ -7,9 +7,9 @@ function mtech_coursedog_generate_api_token() {
     $api_auth_url = "https://app.coursedog.com/api/v1/sessions";
 
     // Temporary: restrict token generation to production only
-    if (!defined('DB_NAME') || DB_NAME !== 'wp_mtec1') {
-        return mtech_coursedog_error('generate_api_token__error_0', 'Not on production environment', 'Token gen: Exited early, not on prod environment.');
-    }
+    // if (!defined('DB_NAME') || DB_NAME !== 'wp_mtec1') {
+    //     return mtech_coursedog_error('generate_api_token__error_0', 'Not on production environment', 'Token gen: Exited early, not on prod environment.');
+    // }
 
     $username = get_option('mtech_coursedog_username');
     $encrypted_password = get_option('mtech_coursedog_encrypted_password');
