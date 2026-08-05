@@ -142,5 +142,5 @@ function mtech_coursedog_get_program_id($program, $type) {
         $like_search
     ));
 
-    return $programId;
+    return $program_id;
 }
