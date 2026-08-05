@@ -34,12 +34,12 @@ function mtech_coursedog_shortcode_handler($atts) {
 
      
 
-    $program_id = mtech_coursedog_get_program_id($program);
+    $program_id_from_db = mtech_coursedog_get_program_id($program);
 
-    $shortcode_data = mtech_coursedog_get_shortcode($program_id, $type);
+    $shortcode_array_from_db = mtech_coursedog_get_shortcode($program_id_from_db, $type);
 
-    // $programData = mtech_coursedog_search_and_fetch_program_data($program, $type);
+    $shortcode_final_value = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db);
 
-    return esc_html("Shortcode data: {$shortcode_data[0]}");
+    return esc_html($shortcode_final_value);
 }
 add_shortcode('mtech-coursedog', 'mtech_coursedog_shortcode_handler');
