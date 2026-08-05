@@ -130,3 +130,17 @@ function mtech_coursedog_seed_programs() {
         }
     }
 }
+
+function mtech_coursedog_get_program_id($program, $type) {
+    global $wpdb;
+    $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
+
+    $like_search = '%' . $wpdb->esc_like($program) . '%';
+    
+    $program_id = $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM $table_programs WHERE name LIKE %s",
+        $like_search
+    ));
+
+    return $programId;
+}
