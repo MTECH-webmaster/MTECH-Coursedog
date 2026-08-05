@@ -136,11 +136,6 @@ function mtech_coursedog_search_and_fetch_program_data($program_data_array, $tok
     $api_url = trailingslashit($api_base_url) . 'programs/search/' . $search_query . '?effectiveDatesRange=' . $effective_dates_range;
     date_default_timezone_set('America/Denver');
 
-    // $token = TokenGen::get_api_token_from_db();
-    // if (is_wp_error($token)) {
-    //     return $token;
-    // }
-
     $response = wp_remote_get($api_url, array(
         'timeout' => 30,
         'headers' => array(
@@ -150,8 +145,7 @@ function mtech_coursedog_search_and_fetch_program_data($program_data_array, $tok
     ));
 
     if (is_wp_error($response)) {
-        // return $response;
-        return 'error 1';
+        return new \WP_Error('mtech_coursedog_search_and_fetch_program_data - API request resulted in an error');
     }
 
     $response_code = wp_remote_retrieve_response_code($response);

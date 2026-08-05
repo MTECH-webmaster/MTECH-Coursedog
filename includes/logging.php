@@ -52,3 +52,8 @@ function mtech_coursedog_error($code, $message, $log_message = null) {
 //     }
 //     return '';
 // }
+
+
+// NOTE - The WP_Error constructor (when using new \WP_Error) takes three optional parameters: error code, error message and error data.
+// Example
+// return new \WP_Error('error code', 'error message', 'error data');
