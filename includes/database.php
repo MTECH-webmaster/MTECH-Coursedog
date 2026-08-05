@@ -131,7 +131,7 @@ function mtech_coursedog_seed_programs() {
     }
 }
 
-function mtech_coursedog_get_program_id($program, $type) {
+function mtech_coursedog_get_program_id($program) {
     global $wpdb;
     $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
 
@@ -143,4 +143,21 @@ function mtech_coursedog_get_program_id($program, $type) {
     ));
 
     return $program_id;
+}
+
+function mtech_coursedog_get_shortcode($program_id, $type) {
+    global $wpdb;
+    $table_shortcode_items = $wpdb->prefix . 'mtech_coursedog_shortcodes';
+
+    $shortcode_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_shortcode_items WHERE program_id = %d", $program_id ) );
+
+    if (!$shortcode_row) {
+        return null;
+    }
+
+    return [
+        $shortcode_row->field,
+        $shortcode_row->type,
+        $shortcode_row->effective_dates_range
+    ];
 }

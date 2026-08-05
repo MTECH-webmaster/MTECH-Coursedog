@@ -34,10 +34,12 @@ function mtech_coursedog_shortcode_handler($atts) {
 
      
 
-    $programId = mtech_coursedog_get_program_id($program, $type);
+    $program_id = mtech_coursedog_get_program_id($program);
+
+    $shortcode_data = mtech_coursedog_get_shortcode($program_id, $type);
 
     // $programData = mtech_coursedog_search_and_fetch_program_data($program, $type);
 
-    return esc_html("Program ID: {$programId}");
+    return esc_html("Shortcode data: {$shortcode_data[0]}");
 }
 add_shortcode('mtech-coursedog', 'mtech_coursedog_shortcode_handler');
