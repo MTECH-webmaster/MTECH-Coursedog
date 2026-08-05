@@ -162,5 +162,3 @@ function mtech_coursedog_db_get_shortcode($program_id, $type) {
         $shortcode_row->effective_dates_range
     ];
 }
-
-// test
