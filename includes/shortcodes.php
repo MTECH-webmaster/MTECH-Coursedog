@@ -34,9 +34,9 @@ function mtech_coursedog_shortcode_handler($atts) {
 
      
 
-    $program_id_from_db = mtech_coursedog_get_program_id($program);
+    $program_id_from_db = mtech_coursedog_db_get_program_id($program);
 
-    $shortcode_array_from_db = mtech_coursedog_get_shortcode($program_id_from_db, $type);
+    $shortcode_array_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
 
     $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db, $token);
     if (is_wp_error($blob_program_data)) {

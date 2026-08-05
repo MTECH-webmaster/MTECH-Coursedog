@@ -131,7 +131,7 @@ function mtech_coursedog_seed_programs() {
     }
 }
 
-function mtech_coursedog_get_program_id($program) {
+function mtech_coursedog_db_get_program_id($program) {
     global $wpdb;
     $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
 
@@ -145,7 +145,7 @@ function mtech_coursedog_get_program_id($program) {
     return $program_id;
 }
 
-function mtech_coursedog_get_shortcode($program_id, $type) {
+function mtech_coursedog_db_get_shortcode($program_id, $type) {
     global $wpdb;
     $table_shortcode_items = $wpdb->prefix . 'mtech_coursedog_shortcodes';
 
