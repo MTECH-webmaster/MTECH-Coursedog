@@ -38,7 +38,7 @@ function mtech_coursedog_shortcode_handler($atts) {
 
     $shortcode_array_from_db = mtech_coursedog_get_shortcode($program_id_from_db, $type);
 
-    $shortcode_final_value = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db);
+    $shortcode_final_value = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db, $token);
 
     return esc_html($shortcode_final_value);
 }
