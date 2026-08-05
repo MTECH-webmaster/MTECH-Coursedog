@@ -27,9 +27,19 @@ function mtech_coursedog_shortcode_handler($atts) {
         return '';
     }
 
-    // Future logic goes here: check transient, fall back to wp_options,
-    // query Coursedog API, format, cache, return value.
+    // Check transient - field
 
-    return esc_html("Program: {$program}, Type: {$type}");
+    // If transient field doesn't exist:
+    // Check transient - blob
+
+     
+
+    $program_id_from_db = mtech_coursedog_get_program_id($program);
+
+    $shortcode_array_from_db = mtech_coursedog_get_shortcode($program_id_from_db, $type);
+
+    $shortcode_final_value = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db);
+
+    return esc_html($shortcode_final_value);
 }
 add_shortcode('mtech-coursedog', 'mtech_coursedog_shortcode_handler');

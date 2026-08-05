@@ -126,3 +126,7 @@ function mtech_coursedog_run_scheduled_token_generation() {
         update_option('mtech_coursedog_token_failures', 0, false);
     }
 }
+
+function mtech_coursedog_search_and_fetch_program_data($program_data_array) {
+    return $program_data_array[1];
+}
