@@ -145,32 +145,26 @@ function mtech_coursedog_search_and_fetch_program_data($program_data_array, $tok
     ));
 
     if (is_wp_error($response)) {
-        return new \WP_Error('mtech_coursedog_search_and_fetch_program_data - API request resulted in an error');
+        return new \WP_Error('mtech_coursedog_search_and_fetch_program_data__1 - API request resulted in an error');
     }
 
     $response_code = wp_remote_retrieve_response_code($response);
     if ($response_code !== 200) {
-        // error_log( date("Y-m-d H:i:s") . ' response code: ' . $response_code . ' fpde12 plain token that failed: ' . $token . "\n", 3, CD_PLUGIN_BASE_DIR . 'cd-error.log' ); // temporary
-        // return new \WP_Error('fetch_program_data__error_1', 'Data not found', 'Coursedog: Response code !== 200');
-        return 'error 2';
+        return new \WP_Error('mtech_coursedog_search_and_fetch_program_data__2 - Response code not 200');
     }
 
     $body = wp_remote_retrieve_body($response);
     if (empty($body)) {
-        // return new \WP_Error('fetch_program_data__error_2', 'Data not found', 'Coursedog: Response body is empty');
-        return 'error 3';
+        return new \WP_Error('mtech_coursedog_search_and_fetch_program_data__3 - Response body is empty');
     }
 
     $data = json_decode($body, true);
     if (is_null($data)) {
-        // return new \WP_Error('fetch_program_data__error_3', 'Data not found', 'Coursedog: Response data is null');
-        return 'error 4';
+        return new \WP_Error('mtech_coursedog_search_and_fetch_program_data__4 - Body data is null');
     }
 
     if (json_last_error() !== JSON_ERROR_NONE) {
-        // $error_message = 'Coursedog: JSON parsing error: ' . json_last_error_msg();
-        // return new \WP_Error('fetch_program_data__error_4', 'Data not found', $error_message);
-        return 'error 5';
+        return new \WP_Error('mtech_coursedog_search_and_fetch_program_data__5 - JSON decoding error');
     }
 
     return $data['data'][0];
