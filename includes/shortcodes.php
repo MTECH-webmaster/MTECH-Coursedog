@@ -38,8 +38,25 @@ function mtech_coursedog_shortcode_handler($atts) {
 
     $shortcode_array_from_db = mtech_coursedog_get_shortcode($program_id_from_db, $type);
 
-    $shortcode_final_value = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db);
+    $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db, $token);
+    $blob_transient_name = $shortcode_array_from_db->search_query . $program_id_from_db;
+    set_transient($blob_transient_name, $blob_program_data, 7200);
 
-    return esc_html($shortcode_final_value);
+
+
+    // Turn on output buffering
+    ob_start();
+
+    echo '<pre>';
+    print_r($blob_program_data);
+    echo '</pre>';
+
+    // Save the captured output to a variable and clean the buffer
+    $debug_output = ob_get_clean();
+
+    return $debug_output;
+
+
+    // return esc_html($blob_program_data);
 }
 add_shortcode('mtech-coursedog', 'mtech_coursedog_shortcode_handler');

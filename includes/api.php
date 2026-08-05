@@ -127,6 +127,57 @@ function mtech_coursedog_run_scheduled_token_generation() {
     }
 }
 
-function mtech_coursedog_search_and_fetch_program_data($program_data_array) {
-    return $program_data_array[1];
+function mtech_coursedog_search_and_fetch_program_data($program_data_array, $token) {
+    $api_base_url = 'https://app.coursedog.com/api/v1/cm/mtech';
+
+    $search_query = $program_data_array[2];
+    $effective_dates_range = $program_data_array[3];
+
+    $api_url = trailingslashit($api_base_url) . 'programs/search/' . $search_query . '?effectiveDatesRange=' . $effective_dates_range;
+    date_default_timezone_set('America/Denver');
+
+    // $token = TokenGen::get_api_token_from_db();
+    // if (is_wp_error($token)) {
+    //     return $token;
+    // }
+
+    $response = wp_remote_get($api_url, array(
+        'timeout' => 30,
+        'headers' => array(
+            'Accept' => 'application/json',  
+            'Authorization' => 'Bearer ' . $token,
+        ),
+    ));
+
+    if (is_wp_error($response)) {
+        // return $response;
+        return 'error 1';
+    }
+
+    $response_code = wp_remote_retrieve_response_code($response);
+    if ($response_code !== 200) {
+        // error_log( date("Y-m-d H:i:s") . ' response code: ' . $response_code . ' fpde12 plain token that failed: ' . $token . "\n", 3, CD_PLUGIN_BASE_DIR . 'cd-error.log' ); // temporary
+        // return new \WP_Error('fetch_program_data__error_1', 'Data not found', 'Coursedog: Response code !== 200');
+        return 'error 2';
+    }
+
+    $body = wp_remote_retrieve_body($response);
+    if (empty($body)) {
+        // return new \WP_Error('fetch_program_data__error_2', 'Data not found', 'Coursedog: Response body is empty');
+        return 'error 3';
+    }
+
+    $data = json_decode($body, true);
+    if (is_null($data)) {
+        // return new \WP_Error('fetch_program_data__error_3', 'Data not found', 'Coursedog: Response data is null');
+        return 'error 4';
+    }
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        // $error_message = 'Coursedog: JSON parsing error: ' . json_last_error_msg();
+        // return new \WP_Error('fetch_program_data__error_4', 'Data not found', $error_message);
+        return 'error 5';
+    }
+
+    return $data['data'][0];
 }

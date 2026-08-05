@@ -158,6 +158,7 @@ function mtech_coursedog_get_shortcode($program_id, $type) {
     return [
         $shortcode_row->field,
         $shortcode_row->type,
+        $shortcode_row->search_query,
         $shortcode_row->effective_dates_range
     ];
 }
