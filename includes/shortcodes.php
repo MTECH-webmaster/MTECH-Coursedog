@@ -39,6 +39,8 @@ function mtech_coursedog_shortcode_handler($atts) {
     $shortcode_array_from_db = mtech_coursedog_get_shortcode($program_id_from_db, $type);
 
     $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_array_from_db, $token);
+    $blob_transient_name = $shortcode_array_from_db->search_query . $program_id_from_db;
+    set_transient($blob_transient_name, $blob_program_data, 7200);
 
 
 
