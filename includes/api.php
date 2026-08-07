@@ -127,11 +127,8 @@ function mtech_coursedog_run_scheduled_token_generation() {
     }
 }
 
-function mtech_coursedog_search_and_fetch_program_data($program_data_array, $token) {
+function mtech_coursedog_search_and_fetch_program_data($search_query, $effective_dates_range, $token) {
     $api_base_url = 'https://app.coursedog.com/api/v1/cm/mtech';
-
-    $search_query = $program_data_array[2];
-    $effective_dates_range = $program_data_array[3];
 
     $api_url = trailingslashit($api_base_url) . 'programs/search/' . rawurlencode($search_query) . '?effectiveDatesRange=' . $effective_dates_range;
     date_default_timezone_set('America/Denver');
