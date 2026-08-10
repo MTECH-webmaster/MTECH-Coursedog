@@ -149,17 +149,11 @@ function mtech_coursedog_db_get_shortcode($program_id, $type) {
     global $wpdb;
     $table_shortcode_items = $wpdb->prefix . 'mtech_coursedog_shortcodes';
 
-    $shortcode_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_shortcode_items WHERE program_id = %d", $program_id ) );
+    $shortcode_row = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $table_shortcode_items WHERE program_id = %d AND type = %s",
+        $program_id,
+        $type
+    ));
 
-    if (!$shortcode_row) {
-        return null;
-    }
-
-    return [
-        $shortcode_row->field,
-        $shortcode_row->type,
-        $shortcode_row->search,
-        $shortcode_row->search_query,
-        $shortcode_row->effective_dates_range
-    ];
+    return $shortcode_row; // null if not found
 }
