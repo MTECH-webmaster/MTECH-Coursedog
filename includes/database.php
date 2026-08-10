@@ -24,9 +24,11 @@ function mtech_coursedog_create_tables() {
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         school_id mediumint(9) NOT NULL,
         name varchar(255) NOT NULL,
+        slug varchar(100) NOT NULL,
         coursedog_program_id varchar(255) DEFAULT NULL,
         PRIMARY KEY  (id),
-        KEY school_id (school_id)
+        KEY school_id (school_id),
+        UNIQUE KEY slug (slug)
     ) $charset_collate;";
     dbDelta( $sql_programs );
 

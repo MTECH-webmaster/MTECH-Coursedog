@@ -169,6 +169,12 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                     </p>
                     <p>
                         <label>
+                            Program Slug<br>
+                            <input type="text" name="slug" value="" required>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
                             Coursedog Program ID <span class="mtech-optional">(optional)</span><br>
                             <input type="text" name="coursedog_program_id" value="">
                         </label>
