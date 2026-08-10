@@ -76,7 +76,8 @@ function mtech_coursedog_save_shortcode_handler() {
     }
 
     if ($result === false) {
-        wp_die('Database error while saving shortcode.', 500);
+        // wp_die('Database error while saving shortcode.', 500);
+        wp_die('Database error: ' . esc_html($wpdb->last_error), 500);
     }
 
     $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
