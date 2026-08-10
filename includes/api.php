@@ -170,3 +170,46 @@ function mtech_coursedog_search_and_fetch_program_data($search_query, $effective
 
     return $data['data'][0];
 }
+
+function mtech_coursedog_fetch_program_data_by_id($program_id, $token) {
+    $api_base_url = 'https://app.coursedog.com/api/v1/cm/mtech';
+    $api_url = trailingslashit($api_base_url) . 'programs/' . $program_id;
+    date_default_timezone_set('America/Denver');
+
+    $response = wp_remote_get($api_url, array(
+        'timeout' => 30,
+        'headers' => array(
+            'Accept' => 'application/json',  
+            'Authorization' => 'Bearer ' . $token,
+        ),
+    ));
+
+    if (is_wp_error($response)) {
+        return new \WP_Error('mtech_coursedog_fetch_program_data_by_id__error_1', 'API request resulted in an error');
+    }
+
+    $response_code = wp_remote_retrieve_response_code($response);
+    if ($response_code !== 200) {
+        return new \WP_Error('mtech_coursedog_fetch_program_data_by_id__error_2', 'Response code not 200');
+    }
+
+    $body = wp_remote_retrieve_body($response);
+    if (empty($body)) {
+        return new \WP_Error('mtech_coursedog_fetch_program_data_by_id__error_3', 'Response body is empty');
+    }
+
+    $data = json_decode($body, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return new \WP_Error('mtech_coursedog_fetch_program_data_by_id__error_4', 'JSON decoding error');
+    }
+
+    if (is_null($data)) {
+        return new \WP_Error('mtech_coursedog_fetch_program_data_by_id__error_5', 'Body data is null');
+    }
+
+    if (empty($data)) {
+        return new \WP_Error('mtech_coursedog_fetch_program_data_by_id__error_6', 'Program data blob is empty');
+    }
+
+    return $data;
+}
