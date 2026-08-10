@@ -199,6 +199,43 @@
     flex: 1;
 }
 
+/* "Edit program" form — inline fields, matching the shortcode/add-program pattern */
+.mtech-program-edit-section {
+    margin: 8px 0 0 0;
+}
+
+.mtech-program-form-edit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.mtech-program-form-edit p {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.mtech-program-form-edit label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #50575e;
+    margin-bottom: 4px;
+}
+
+.mtech-program-form-edit input[type="text"] {
+    width: 200px;
+    height: 30px;
+    box-sizing: border-box;
+}
+
+.mtech-program-form-edit .button {
+    height: 30px;
+    line-height: 28px;
+    margin: 0;
+}
+
 /* "Remove Program" link — subdued by default, reads as destructive on hover.
    Hidden until the row is hovered/focused so it doesn't compete visually
    with the caret at rest. */
