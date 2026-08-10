@@ -35,7 +35,7 @@ function mtech_coursedog_shortcode_handler($atts) {
      
 
     $program_row = mtech_coursedog_db_get_program_by_slug($program_slug);
-    return $program_row->id;
+    return $program_row->coursedog_program_id;
 
     
     $shortcode_array_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
