@@ -49,7 +49,11 @@ function mtech_coursedog_shortcode_handler($atts) {
         }
     }
     else {
-        $blob_program_data = "Test blob: prog ID not null";
+        $blob_program_data = mtech_coursedog_fetch_program_data_by_id($coursedog_program_id_from_db);
+        if (is_wp_error($blob_program_data)) {
+            mtech_coursedog_log($blob_program_data->get_error_message());
+            return '';
+        }
     }
 
 
