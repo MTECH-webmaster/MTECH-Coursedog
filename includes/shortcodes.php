@@ -37,16 +37,25 @@ function mtech_coursedog_shortcode_handler($atts) {
     $program_row = mtech_coursedog_db_get_program_by_slug($program_slug);
 
     $program_id_from_db = $program_row->id;
+    $coursedog_program_id_from_db = $program_row->coursedog_program_id;
     
     $shortcode_object_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
 
-    // Check whether search is 0 or 1, then branch off
-
-    $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_object_from_db->search_query, $shortcode_object_from_db->effective_dates_range, $token);
-    if (is_wp_error($blob_program_data)) {
-        mtech_coursedog_log($blob_program_data->get_error_message());
-        return '';
+    if (is_null($coursedog_program_id_from_db)) {
+        $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_object_from_db->search_query, $shortcode_object_from_db->effective_dates_range, $token);
+        if (is_wp_error($blob_program_data)) {
+            mtech_coursedog_log($blob_program_data->get_error_message());
+            return '';
+        }
     }
+    else {
+        $blob_program_data = mtech_coursedog_fetch_program_data_by_id($coursedog_program_id_from_db, $token);
+        if (is_wp_error($blob_program_data)) {
+            mtech_coursedog_log($blob_program_data->get_error_message());
+            return '';
+        }
+    }
+
 
     $blob_transient_name = $shortcode_object_from_db->search_query . $program_id_from_db;
     set_transient($blob_transient_name, $blob_program_data, 7200);
