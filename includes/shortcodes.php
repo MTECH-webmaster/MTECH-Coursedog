@@ -7,17 +7,17 @@ if (!defined('ABSPATH')) {
 function mtech_coursedog_shortcode_handler($atts) {
     $atts = shortcode_atts(
         array(
-            'program' => '',
+            'program_slug' => '',
             'type'    => '',
         ),
         $atts,
         'mtech-coursedog'
     );
 
-    $program = sanitize_text_field($atts['program']);
+    $program_slug = sanitize_text_field($atts['program_slug']);
     $type    = sanitize_text_field($atts['type']);
 
-    if (empty($program) || empty($type)) {
+    if (empty($program_slug) || empty($type)) {
         return '';
     }
 
@@ -34,7 +34,8 @@ function mtech_coursedog_shortcode_handler($atts) {
 
      
 
-    $program_id_from_db = mtech_coursedog_db_get_program_id($program);
+    $program_row = mtech_coursedog_db_get_program_by_slug($program_slug);
+    return $program_row->id;
 
     
     $shortcode_array_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
