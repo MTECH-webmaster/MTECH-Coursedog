@@ -24,9 +24,11 @@ function mtech_coursedog_create_tables() {
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         school_id mediumint(9) NOT NULL,
         name varchar(255) NOT NULL,
+        slug varchar(100) NOT NULL,
         coursedog_program_id varchar(255) DEFAULT NULL,
         PRIMARY KEY  (id),
-        KEY school_id (school_id)
+        KEY school_id (school_id),
+        UNIQUE KEY slug (slug)
     ) $charset_collate;";
     dbDelta( $sql_programs );
 
@@ -131,35 +133,27 @@ function mtech_coursedog_seed_programs() {
     }
 }
 
-function mtech_coursedog_db_get_program_id($program) {
+function mtech_coursedog_db_get_program_by_slug($slug) {
     global $wpdb;
     $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
 
-    $like_search = '%' . $wpdb->esc_like($program) . '%';
-    
-    $program_id = $wpdb->get_var($wpdb->prepare(
-        "SELECT id FROM $table_programs WHERE name LIKE %s",
-        $like_search
+    $program = $wpdb->get_row($wpdb->prepare(
+        "SELECT id, coursedog_program_id FROM $table_programs WHERE slug = %s",
+        $slug
     ));
 
-    return $program_id;
+    return $program; // null if not found, otherwise an object with ->id and ->coursedog_program_id
 }
 
 function mtech_coursedog_db_get_shortcode($program_id, $type) {
     global $wpdb;
     $table_shortcode_items = $wpdb->prefix . 'mtech_coursedog_shortcodes';
 
-    $shortcode_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table_shortcode_items WHERE program_id = %d", $program_id ) );
+    $shortcode_row = $wpdb->get_row($wpdb->prepare(
+        "SELECT * FROM $table_shortcode_items WHERE program_id = %d AND type = %s",
+        $program_id,
+        $type
+    ));
 
-    if (!$shortcode_row) {
-        return null;
-    }
-
-    return [
-        $shortcode_row->field,
-        $shortcode_row->type,
-        $shortcode_row->search,
-        $shortcode_row->search_query,
-        $shortcode_row->effective_dates_range
-    ];
+    return $shortcode_row; // null if not found
 }

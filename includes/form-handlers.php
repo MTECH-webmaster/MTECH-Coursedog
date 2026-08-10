@@ -150,16 +150,22 @@ function mtech_coursedog_add_program_handler() {
         wp_die('Program name is required', 400);
     }
 
+    $slug = isset($_POST['slug']) ? sanitize_text_field($_POST['slug']) : '';
+    if ($slug === '') {
+        wp_die('Program slug is required', 400);
+    }
+
     $coursedog_program_id = isset($_POST['coursedog_program_id']) ? sanitize_text_field($_POST['coursedog_program_id']) : '';
 
     $data = array(
         'school_id' => $school_id,
         'name'      => $name,
+        'slug'      => $slug,
         // Store NULL rather than an empty string when no Coursedog ID is given,
         // so the column's UNIQUE-among-non-null behavior stays meaningful
         'coursedog_program_id' => $coursedog_program_id !== '' ? $coursedog_program_id : null,
     );
-    $formats = array('%d', '%s', $coursedog_program_id !== '' ? '%s' : null);
+    $formats = array('%d', '%s', '%s', $coursedog_program_id !== '' ? '%s' : null);
 
     $result = $wpdb->insert($table_programs, $data, $formats);
 

@@ -7,17 +7,17 @@ if (!defined('ABSPATH')) {
 function mtech_coursedog_shortcode_handler($atts) {
     $atts = shortcode_atts(
         array(
-            'program' => '',
+            'program_slug' => '',
             'type'    => '',
         ),
         $atts,
         'mtech-coursedog'
     );
 
-    $program = sanitize_text_field($atts['program']);
+    $program_slug = sanitize_text_field($atts['program_slug']);
     $type    = sanitize_text_field($atts['type']);
 
-    if (empty($program) || empty($type)) {
+    if (empty($program_slug) || empty($type)) {
         return '';
     }
 
@@ -34,21 +34,21 @@ function mtech_coursedog_shortcode_handler($atts) {
 
      
 
-    $program_id_from_db = mtech_coursedog_db_get_program_id($program);
+    $program_row = mtech_coursedog_db_get_program_by_slug($program_slug);
 
+    $program_id_from_db = $program_row->id;
     
-    $shortcode_array_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
-    [$field, $type, $search, $search_query, $effective_dates_range] = $shortcode_array_from_db;
+    $shortcode_object_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
 
     // Check whether search is 0 or 1, then branch off
 
-    $blob_program_data = mtech_coursedog_search_and_fetch_program_data($search_query, $effective_dates_range, $token);
+    $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_object_from_db->search_query, $shortcode_object_from_db->effective_dates_range, $token);
     if (is_wp_error($blob_program_data)) {
         mtech_coursedog_log($blob_program_data->get_error_message());
         return '';
     }
 
-    $blob_transient_name = $search_query . $program_id_from_db;
+    $blob_transient_name = $shortcode_object_from_db->search_query . $program_id_from_db;
     set_transient($blob_transient_name, $blob_program_data, 7200);
 
 
