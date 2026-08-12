@@ -18,3 +18,5 @@
 
 - Add in PROD check in mtech_coursedog_generate_api_token() in api.php
 - https://www.youtube.com/watch?v=jXp5D5ZnxGM
+
+HVACR Technician program ID for testing: bPG2vHPknPtCuEMe2uKg-2026-07-01
