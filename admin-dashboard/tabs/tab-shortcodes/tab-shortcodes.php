@@ -96,8 +96,6 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 </form>
                             </div>
                         </li>
-                        <hr>
-
 
                         <?php foreach ($shortcode_rows as $shortcode) : ?>
                             <li>
