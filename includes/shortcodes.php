@@ -33,7 +33,7 @@ function mtech_coursedog_shortcode_handler($atts) {
     // Check shortcode transient
     $shortcode_transient = get_transient($shortcode_transient_name);
     if ($shortcode_transient !== false) {
-        return $shortcode_transient
+        return $shortcode_transient;
     }
 
     // Create blob transient name
