@@ -27,19 +27,38 @@ function mtech_coursedog_shortcode_handler($atts) {
         return '';
     }
 
-    // Check transient - field
+    // Create shortcode transient name
+    $shortcode_transient_name = $program_slug . $type;
 
-    // If transient field doesn't exist:
-    // Check transient - blob
+    // Check shortcode transient
+    $shortcode_transient = get_transient($shortcode_transient_name);
+    if ($shortcode_transient !== false) {
+        return $shortcode_transient
+    }
 
-     
+    // Create blob transient name
+    $blob_transient_name = $program_slug . "_blob";
 
-    $program_row = mtech_coursedog_db_get_program_by_slug($program_slug);
+    $blob_program_data = "";
 
-    $program_id_from_db = $program_row->id;
-    $coursedog_program_id_from_db = $program_row->coursedog_program_id;
+    // Check blob transient
+    $blob_program_data_transient = get_transient($blob_transient_name);
+    if ($blob_program_data_transient !== false) {
+        $blob_program_data = $blob_program_data_transient;
+    }
+    else {
+        // Get program row using program slug
+        $program_row = mtech_coursedog_db_get_program_by_slug($program_slug);
     
-    $shortcode_object_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
+        // Get coursedog program ID for query
+        $coursedog_program_id_from_db = $program_row->coursedog_program_id;
+    
+        if (is_null($coursedog_program_id_from_db)) {
+            // Get program ID (auto-increment, not Coursedog)
+            $program_id_from_db = $program_row->id;
+            
+            // Get shortcode row/object
+            $shortcode_object_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
 
             $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_object_from_db->search_query, $shortcode_object_from_db->effective_dates_range, $token);
             if (is_wp_error($blob_program_data)) {
