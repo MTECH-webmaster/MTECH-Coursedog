@@ -73,10 +73,10 @@ function mtech_coursedog_shortcode_handler($atts) {
                 return '';
             }
         }
+        
+        set_transient($blob_transient_name, $blob_program_data, 7200);
     }
 
-
-    set_transient($blob_transient_name, $blob_program_data, 7200);
 
 
 
