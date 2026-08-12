@@ -150,9 +150,16 @@ function mtech_coursedog_add_program_handler() {
         wp_die('Program name is required', 400);
     }
 
-    $slug = isset($_POST['slug']) ? sanitize_text_field($_POST['slug']) : '';
+    $slug = isset($_POST['slug']) ? mtech_coursedog_sanitize_program_slug($_POST['slug']) : '';
     if ($slug === '') {
-        wp_die('Program slug is required', 400);
+        wp_die('A valid program slug is required', 400);
+    }
+
+    $duplicate_slug = $wpdb->get_var(
+        $wpdb->prepare("SELECT id FROM $table_programs WHERE slug = %s", $slug)
+    );
+    if ($duplicate_slug) {
+        wp_die('This slug is already in use by another program.', 400);
     }
 
     $coursedog_program_id = isset($_POST['coursedog_program_id']) ? sanitize_text_field($_POST['coursedog_program_id']) : '';
@@ -264,3 +271,79 @@ function mtech_coursedog_save_api_credentials_handler() {
     exit;
 }
 add_action('admin_post_mtech_coursedog_save_api_credentials', 'mtech_coursedog_save_api_credentials_handler');
+
+function mtech_coursedog_sanitize_program_slug($raw_slug) {
+    // sanitize_title() is WordPress's built-in slug normalizer — same logic
+    // used for post/page slugs. Turns "Automation Technology!" into "automation-technology".
+    return sanitize_title($raw_slug);
+}
+
+function mtech_coursedog_edit_program_handler() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized', 403);
+    }
+
+    $program_id = isset($_POST['program_id']) ? absint($_POST['program_id']) : 0;
+
+    if (!$program_id || !isset($_POST['mtech_coursedog_edit_program_nonce']) ||
+        !wp_verify_nonce($_POST['mtech_coursedog_edit_program_nonce'], 'mtech_coursedog_edit_program_' . $program_id)) {
+        wp_die('Invalid request', 400);
+    }
+
+    global $wpdb;
+    $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
+
+    $program_exists = $wpdb->get_var(
+        $wpdb->prepare("SELECT id FROM $table_programs WHERE id = %d", $program_id)
+    );
+    if (!$program_exists) {
+        wp_die('Invalid program', 400);
+    }
+
+    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    if ($name === '') {
+        wp_die('Program name is required', 400);
+    }
+
+    $slug = isset($_POST['slug']) ? mtech_coursedog_sanitize_program_slug($_POST['slug']) : '';
+    if ($slug === '') {
+        wp_die('A valid program slug is required', 400);
+    }
+
+    // Confirm the slug isn't already used by a *different* program
+    $duplicate = $wpdb->get_var(
+        $wpdb->prepare(
+            "SELECT id FROM $table_programs WHERE slug = %s AND id != %d",
+            $slug,
+            $program_id
+        )
+    );
+    if ($duplicate) {
+        wp_die('This slug is already in use by another program.', 400);
+    }
+
+    $coursedog_program_id = isset($_POST['coursedog_program_id']) ? sanitize_text_field($_POST['coursedog_program_id']) : '';
+
+    $data = array(
+        'name'                 => $name,
+        'slug'                 => $slug,
+        'coursedog_program_id' => $coursedog_program_id !== '' ? $coursedog_program_id : null,
+    );
+    $formats = array('%s', '%s', $coursedog_program_id !== '' ? '%s' : null);
+
+    $result = $wpdb->update($table_programs, $data, array('id' => $program_id), $formats, array('%d'));
+
+    if ($result === false) {
+        wp_die('Database error while updating program.', 500);
+    }
+
+    $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
+    $redirect = add_query_arg(
+        'mtech_program_updated', '1',
+        remove_query_arg(array('mtech_saved', 'mtech_deleted', 'mtech_program_added', 'mtech_program_removed', 'mtech_program_updated'), $redirect)
+    );
+
+    wp_safe_redirect($redirect);
+    exit;
+}
+add_action('admin_post_mtech_coursedog_edit_program', 'mtech_coursedog_edit_program_handler');
