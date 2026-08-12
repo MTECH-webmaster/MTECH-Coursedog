@@ -64,37 +64,40 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                             <button type="submit" class="button-link mtech-remove-program-link">Remove Program</button>
                         </form>
                     </div>
-
-                    <div class="mtech-program-edit-section">
-                        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-program-form-edit">
-                            <input type="hidden" name="action" value="mtech_coursedog_edit_program">
-                            <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
-                            <?php wp_nonce_field('mtech_coursedog_edit_program_' . $program->id, 'mtech_coursedog_edit_program_nonce'); ?>
-                            <p>
-                                <label>
-                                    Program Name<br>
-                                    <input type="text" name="name" value="<?php echo esc_attr($program->name); ?>" required>
-                                </label>
-                            </p>
-                            <p>
-                                <label>
-                                    Program Slug<br>
-                                    <input type="text" name="slug" value="<?php echo esc_attr($program->slug); ?>" required>
-                                </label>
-                            </p>
-                            <p>
-                                <label>
-                                    Coursedog Program ID <span class="mtech-optional">(optional)</span><br>
-                                    <input type="text" name="coursedog_program_id" value="<?php echo esc_attr($program->coursedog_program_id); ?>">
-                                </label>
-                            </p>
-                            <p>
-                                <button type="submit" class="button button-primary">Update Program</button>
-                            </p>
-                        </form>
-                    </div>
-
+                    
                     <ul class="mtech-nested">
+                        <li>
+                            <div class="mtech-program-edit-section">
+                                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-program-form-edit">
+                                    <input type="hidden" name="action" value="mtech_coursedog_edit_program">
+                                    <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
+                                    <?php wp_nonce_field('mtech_coursedog_edit_program_' . $program->id, 'mtech_coursedog_edit_program_nonce'); ?>
+                                    <p>
+                                        <label>
+                                            Program Name<br>
+                                            <input type="text" name="name" value="<?php echo esc_attr($program->name); ?>" required>
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            Program Slug<br>
+                                            <input type="text" name="slug" value="<?php echo esc_attr($program->slug); ?>" required>
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            Coursedog Program ID <span class="mtech-optional">(optional)</span><br>
+                                            <input type="text" name="coursedog_program_id" value="<?php echo esc_attr($program->coursedog_program_id); ?>">
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <button type="submit" class="button button-primary">Update Program</button>
+                                    </p>
+                                </form>
+                            </div>
+                        </li>
+
+
                         <?php foreach ($shortcode_rows as $shortcode) : ?>
                             <li>
                                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form">
