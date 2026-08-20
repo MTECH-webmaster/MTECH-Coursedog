@@ -40,18 +40,34 @@ function mtech_coursedog_shortcode_handler($atts) {
     /////////////////////////////////////
     // Get program row using program slug
     $program_row = mtech_coursedog_db_get_program_by_slug($program_slug);
+    if (is_null($program_row)) {
+        mtech_coursedog_log("Program with slug '{$program_slug}' not found in database.");
+        return '';
+    }
 
     // Get coursedog program ID for query
     $coursedog_program_id_from_db = $program_row->coursedog_program_id;
 
     // Get program ID (auto-increment, not Coursedog)
     $program_id_from_db = $program_row->id;
+    if (empty($program_id_from_db)) {
+        mtech_coursedog_log("Program ID for slug '{$program_slug}' not found in database.");
+        return '';
+    }
     
     // Get shortcode row/object
     $shortcode_object_from_db = mtech_coursedog_db_get_shortcode($program_id_from_db, $type);
+    if (is_null($shortcode_object_from_db)) {
+        mtech_coursedog_log("Shortcode for program ID '{$program_id_from_db}' and type '{$type}' not found in database.");
+        return '';
+    }
 
     // Get field name for query
     $field = $shortcode_object_from_db->field;
+    if (empty($field)) {
+        mtech_coursedog_log("Field for program ID '{$program_id_from_db}' and type '{$type}' not found in database.");
+        return '';
+    }
     /////////////////////////////////////
 
     // Create blob transient name
