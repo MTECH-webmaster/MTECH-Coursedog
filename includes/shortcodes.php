@@ -59,12 +59,13 @@ function mtech_coursedog_shortcode_handler($atts) {
 
     $blob_program_data = "";
 
-    // Check blob transient
+    // Check blob transient and retrieve if it doesn't exist
     $blob_program_data_transient = get_transient($blob_transient_name);
     if ($blob_program_data_transient !== false) {
         $blob_program_data = $blob_program_data_transient;
     }
     else {
+        // If no coursedog program ID is present, search and fetch
         if (is_null($coursedog_program_id_from_db)) {
             $blob_program_data = mtech_coursedog_search_and_fetch_program_data($shortcode_object_from_db->search_query, $shortcode_object_from_db->effective_dates_range, $token);
             if (is_wp_error($blob_program_data)) {
@@ -72,6 +73,7 @@ function mtech_coursedog_shortcode_handler($atts) {
                 return '';
             }
         }
+        // If coursedog program ID is present, fetch by ID
         else {
             $blob_program_data = mtech_coursedog_fetch_program_data_by_id($coursedog_program_id_from_db, $token);
             if (is_wp_error($blob_program_data)) {
