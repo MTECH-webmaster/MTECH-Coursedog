@@ -25,3 +25,9 @@ function mtech_coursedog_set_shortcode_transient($program_slug, $type, $field_da
     $shortcode_transient_name = $program_slug . $type;
     set_transient($shortcode_transient_name, $field_data, 7200);
 }
+
+function mtech_coursedog_delete_shortcode_transient($program_slug, $type) {
+    $shortcode_transient_name = $program_slug . $type;
+    $was_deleted = delete_transient($shortcode_transient_name);
+    return $was_deleted;
+}

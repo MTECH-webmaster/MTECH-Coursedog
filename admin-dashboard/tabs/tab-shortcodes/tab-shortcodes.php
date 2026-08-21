@@ -25,6 +25,12 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
 <?php if (isset($_GET['mtech_program_updated']) && $_GET['mtech_program_updated'] === '1') : ?>
     <div class="notice notice-success is-dismissible"><p>Program updated.</p></div>
 <?php endif; ?>
+<?php if (isset($_GET['mtech_shortcode_transient_deleted']) && $_GET['mtech_shortcode_transient_deleted'] === '1') : ?>
+    <div class="notice notice-success is-dismissible"><p>Shortcode transient deleted.</p></div>
+<?php endif; ?>
+<?php if (isset($_GET['mtech_shortcode_transient_deleted']) && $_GET['mtech_shortcode_transient_deleted'] === '0') : ?>
+    <div class="notice notice-warning is-dismissible"><p>Shortcode transient not found.</p></div>
+<?php endif; ?>
 <ul id="mtech-coursedog-tree">
 <?php foreach ($schools as $school) :
     // $programs = $wpdb->get_results(
@@ -138,6 +144,17 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                         <button type="submit" class="button button-primary">Save</button>
                                     </p>
                                 </form>
+                                <!--  -->
+                                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form-delete">
+                                    <input type="hidden" name="action" value="mtech_coursedog_delete_shortcode_transient">
+                                    <input type="hidden" name="program_slug" value="<?php echo esc_attr($program->slug); ?>">
+                                    <input type="hidden" name="shortcode_type" value="<?php echo esc_attr($shortcode->type); ?>">
+                                    <?php wp_nonce_field('mtech_coursedog_delete_shortcode_transient_' . $program->slug . $shortcode->type, 'mtech_coursedog_delete_nonce'); ?>
+                                    <p>
+                                        <button type="submit" class="button button-secondary">Delete Transient</button>
+                                    </p>
+                                </form>
+                                <!--  -->
                                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form-delete" onsubmit="return confirm('Delete this shortcode? This cannot be undone.');">
                                     <input type="hidden" name="action" value="mtech_coursedog_delete_shortcode">
                                     <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
