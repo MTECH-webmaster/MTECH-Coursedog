@@ -87,6 +87,35 @@ function mtech_coursedog_save_shortcode_handler() {
 }
 add_action('admin_post_mtech_coursedog_save_shortcode', 'mtech_coursedog_save_shortcode_handler');
 
+function mtech_coursedog_delete_shortcode_transient_handler() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized', 403);
+    }
+
+    $program_slug   = isset($_POST['program_slug']) ? sanitize_text_field($_POST['program_slug']) : 0;
+    $shortcode_type = isset($_POST['shortcode_type']) ? sanitize_text_field($_POST['shortcode_type']) : 0;
+
+    if (!$shortcode_type || !isset($_POST['mtech_coursedog_delete_nonce']) ||
+        !wp_verify_nonce($_POST['mtech_coursedog_delete_nonce'], 'mtech_coursedog_delete_shortcode_transient_' . $program_slug . $shortcode_type)) {
+        wp_die('Invalid request', 400);
+    }
+
+    $was_deleted = mtech_coursedog_delete_shortcode_transient($program_slug, $shortcode_type);
+
+    if ($was_deleted === true) {
+        $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
+        $redirect = add_query_arg('mtech_shortcode_transient_deleted', '1', remove_query_arg(array('mtech_saved', 'mtech_deleted'), $redirect));
+        }
+    else {
+        $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
+        $redirect = add_query_arg('mtech_shortcode_transient_deleted', '0', remove_query_arg(array('mtech_saved', 'mtech_deleted'), $redirect));
+    }
+
+    wp_safe_redirect($redirect);
+    exit;
+}
+add_action('admin_post_mtech_coursedog_delete_shortcode_transient', 'mtech_coursedog_delete_shortcode_transient_handler');
+
 function mtech_coursedog_delete_shortcode_handler() {
     if (!current_user_can('manage_options')) {
         wp_die('Unauthorized', 403);
