@@ -67,9 +67,6 @@ function mtech_coursedog_shortcode_handler($atts) {
     }
     /////////////////////////////////////
 
-    // Create blob transient name
-    // $blob_transient_name = $program_slug . "_blob";
-
     $blob_program_data = "";
 
     // Check blob transient and retrieve if it doesn't exist
@@ -99,7 +96,6 @@ function mtech_coursedog_shortcode_handler($atts) {
     }
 
     $field_data = mtech_coursedog_format_program_data($blob_program_data, $field, $type);
-    // set_transient($shortcode_transient_name, $field_data, 7200);
     mtech_coursedog_set_shortcode_transient($program_slug, $type, $field_data);
 
 
