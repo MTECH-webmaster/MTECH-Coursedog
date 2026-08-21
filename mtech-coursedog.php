@@ -20,6 +20,7 @@ require_once __DIR__ . '/includes/logging.php';
 require_once __DIR__ . '/includes/encryption.php';
 require_once __DIR__ . '/includes/api.php';
 require_once __DIR__ . '/includes/formatters/formatters.php';
+require_once __DIR__ . '/includes/transients.php';
 
 class MTECH_Coursedog {
 
