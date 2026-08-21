@@ -27,11 +27,8 @@ function mtech_coursedog_shortcode_handler($atts) {
         return '';
     }
 
-    // Create shortcode transient name
-    $shortcode_transient_name = $program_slug . $type;
-
     // Check shortcode transient
-    $shortcode_transient = get_transient($shortcode_transient_name);
+    $shortcode_transient = mtech_coursedog_get_shortcode_transient($program_slug, $type);
     if ($shortcode_transient !== false) {
         return $shortcode_transient;
     }
@@ -70,13 +67,10 @@ function mtech_coursedog_shortcode_handler($atts) {
     }
     /////////////////////////////////////
 
-    // Create blob transient name
-    $blob_transient_name = $program_slug . "_blob";
-
     $blob_program_data = "";
 
     // Check blob transient and retrieve if it doesn't exist
-    $blob_program_data_transient = get_transient($blob_transient_name);
+    $blob_program_data_transient = mtech_coursedog_get_program_blob_transient($program_slug);
     if ($blob_program_data_transient !== false) {
         $blob_program_data = $blob_program_data_transient;
     }
@@ -98,11 +92,11 @@ function mtech_coursedog_shortcode_handler($atts) {
             }
         }
         
-        set_transient($blob_transient_name, $blob_program_data, 7200);
+        mtech_coursedog_set_program_blob_transient($program_slug, $blob_program_data);
     }
 
     $field_data = mtech_coursedog_format_program_data($blob_program_data, $field, $type);
-    set_transient($shortcode_transient_name, $field_data, 7200);
+    mtech_coursedog_set_shortcode_transient($program_slug, $type, $field_data);
 
 
 
