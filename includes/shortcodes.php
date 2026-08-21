@@ -27,11 +27,8 @@ function mtech_coursedog_shortcode_handler($atts) {
         return '';
     }
 
-    // Create shortcode transient name
-    $shortcode_transient_name = $program_slug . $type;
-
     // Check shortcode transient
-    $shortcode_transient = get_transient($shortcode_transient_name);
+    $shortcode_transient = mtech_coursedog_get_shortcode_transient($program_slug, $type);
     if ($shortcode_transient !== false) {
         return $shortcode_transient;
     }
@@ -102,7 +99,8 @@ function mtech_coursedog_shortcode_handler($atts) {
     }
 
     $field_data = mtech_coursedog_format_program_data($blob_program_data, $field, $type);
-    set_transient($shortcode_transient_name, $field_data, 7200);
+    // set_transient($shortcode_transient_name, $field_data, 7200);
+    mtech_coursedog_set_shortcode_transient($program_slug, $type, $field_data);
 
 
 
