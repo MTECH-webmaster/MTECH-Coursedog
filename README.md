@@ -15,7 +15,8 @@
 - Add program edit option in dashboard
 - Cache layer - raw program data
 - Formatter - Cost
-- Cache layer - field value <
+- Cache layer - field value
+- Delete shortcode transient button in dashboard <
 
 - Add in PROD check in mtech_coursedog_generate_api_token() in api.php
 - https://www.youtube.com/watch?v=jXp5D5ZnxGM
