@@ -2,7 +2,7 @@
 /*
  * Plugin Name: MTECH Coursedog
  * Description: MTECH website integration with Coursedog Curriculum
- * Version: 1.02
+ * Version: 1.03
  * Author: MTECH
  * Author URI: https://mtec.edu
  */
