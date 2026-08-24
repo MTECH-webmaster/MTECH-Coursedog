@@ -4,10 +4,13 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/format-cost.php';
+require_once __DIR__ . '/format-program-length.php';
 
 function mtech_coursedog_get_formatters() {
     return array(
         'cost' => 'mtech_coursedog_format_cost',
+        'program_length' => 'mtech_coursedog_format_program_length',
+        'program_length_mobile' => 'mtech_coursedog_format_program_length_mobile',
     );
 }
 

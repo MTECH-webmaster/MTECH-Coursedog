@@ -30,7 +30,7 @@ function mtech_coursedog_shortcode_handler($atts) {
     // Check shortcode transient
     $shortcode_transient = mtech_coursedog_get_shortcode_transient($program_slug, $type);
     if ($shortcode_transient !== false) {
-        return $shortcode_transient;
+        return $shortcode_transient . '<!-- Cached -->';
     }
 
     // RETRIEVE SHORTCODE DATA FROM DATABASE HERE BECAUSE IT WILL BE NEEDED REGARDLESS OF BLOB TANSIENT EXISINT OR A COURSEDOG PROGRAM ID BEING USED.
@@ -106,7 +106,7 @@ function mtech_coursedog_shortcode_handler($atts) {
 
     echo '<pre>';
     // print_r($blob_program_data);
-    print_r($field_data);
+    print_r($field_data . '<!-- Not Cached -->');
     echo '</pre>';
 
     // Save the captured output to a variable and clean the buffer
