@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once __DIR__ . '/format-cost.php';
-require_once __DIR__ . '/format-program-length.php';
+require_once __DIR__ . '/format-length.php';
 
 function mtech_coursedog_get_formatters() {
     return array(
