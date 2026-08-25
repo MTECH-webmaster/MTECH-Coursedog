@@ -4,5 +4,9 @@ if (!defined('ABSPATH')) {
 }
 
 function mtech_coursedog_format_certs($raw_value) {
-    return $raw_value;
+    if (empty($raw_value)) {
+        return '';
+    }
+
+    return wp_kses_post($raw_value);
 }
