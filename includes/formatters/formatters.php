@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
 require_once __DIR__ . '/format-cost.php';
 require_once __DIR__ . '/format-length.php';
 require_once __DIR__ . '/format-certs.php';
+require_once __DIR__ . '/format-registration.php';
 
 function mtech_coursedog_get_formatters() {
     return array(
@@ -13,6 +14,8 @@ function mtech_coursedog_get_formatters() {
         'program_length' => 'mtech_coursedog_format_program_length',
         'program_length_mobile' => 'mtech_coursedog_format_program_length_mobile',
         'certs' => 'mtech_coursedog_format_certs',
+        'registration_range' => 'mtech_coursedog_format_registration_range',
+        'registration_table' => 'mtech_coursedog_format_registration_table',
     );
 }
 
