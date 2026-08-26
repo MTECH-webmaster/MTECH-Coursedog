@@ -4,6 +4,10 @@ if (!defined('ABSPATH')) {
 }
 
 function mtech_coursedog_format_program_length($raw_value) {
+    if (empty($raw_value)) {
+        return '';
+    }
+    
     return esc_html($raw_value);
 }
 

@@ -4,6 +4,10 @@ if (!defined('ABSPATH')) {
 }
 
 function mtech_coursedog_format_cost($raw_value) {
+    if (empty($raw_value)) {
+        return '';
+    }
+
     $numberCleaned = preg_replace('/[^\d.]/', '', $raw_value);
     $float = floatval($numberCleaned);
     $intValue = intval(round($float));
