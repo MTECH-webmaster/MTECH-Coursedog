@@ -16,6 +16,7 @@ function mtech_coursedog_get_formatters() {
         'certs' => 'mtech_coursedog_format_certs',
         'registration_range' => 'mtech_coursedog_format_registration_range',
         'registration_table' => 'mtech_coursedog_format_registration_table',
+        'prereqs' => 'mtech_coursedog_format_prereqs',
     );
 }
 
