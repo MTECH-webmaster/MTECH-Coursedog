@@ -27,6 +27,14 @@ function mtech_coursedog_format_program_data($blob, $field, $type) {
         return '';
     }
 
+    // Prereqs needs the whole customFields object, not a single extracted field
+    if ($type === 'prereqs') {
+        $custom_fields = isset($blob['customFields']) && is_array($blob['customFields'])
+            ? $blob['customFields']
+            : array();
+        return call_user_func($formatters[$type], $custom_fields);
+    }
+
     $raw_value = isset($blob['customFields'][$field]) ? $blob['customFields'][$field] : null;
 
     if ($raw_value === null) {
