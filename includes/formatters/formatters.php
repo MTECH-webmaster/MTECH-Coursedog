@@ -7,6 +7,7 @@ require_once __DIR__ . '/format-cost.php';
 require_once __DIR__ . '/format-length.php';
 require_once __DIR__ . '/format-certs.php';
 require_once __DIR__ . '/format-registration.php';
+require_once __DIR__ . '/format-prereqs.php';
 
 function mtech_coursedog_get_formatters() {
     return array(
