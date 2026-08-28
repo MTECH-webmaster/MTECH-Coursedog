@@ -17,6 +17,7 @@
 - Formatter - Cost
 - Cache layer - field value
 - Delete shortcode transient button in dashboard <
+- Add handler for materials and supplies for the MTECH Store page
 
 - Add in PROD check in mtech_coursedog_generate_api_token() in api.php
 - https://www.youtube.com/watch?v=jXp5D5ZnxGM
