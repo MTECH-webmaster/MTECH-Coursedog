@@ -9,16 +9,16 @@ function mtech_coursedog_generate_api_token() {
         return mtech_coursedog_error('generate_api_token__error_0', 'API auth URL not defined');
     }
 
-    // Temporary: restrict token generation to production only
-    // if (!defined('DB_NAME') || DB_NAME !== 'wp_mtec1') {
-    //     return mtech_coursedog_error('generate_api_token__error_0', 'Not on production environment', 'Token gen: Exited early, not on prod environment.');
-    // }
+    // Restrict token generation to production only
+    if (!defined('DB_NAME') || DB_NAME !== 'wp_mtec1') {
+        return mtech_coursedog_error('generate_api_token__error_1', 'Not on production environment', 'Token gen: Exited early, not on prod environment.');
+    }
 
     $username = get_option('mtech_coursedog_username');
     $encrypted_password = get_option('mtech_coursedog_encrypted_password');
 
     if ($username === false || $encrypted_password === false) {
-        return mtech_coursedog_error('generate_api_token__error_1', 'Missing API credentials');
+        return mtech_coursedog_error('generate_api_token__error_2', 'Missing API credentials');
     }
 
     $password = mtech_coursedog_decrypt_data($encrypted_password);
@@ -46,12 +46,12 @@ function mtech_coursedog_generate_api_token() {
 
     $body = wp_remote_retrieve_body($response);
     if ($body === '') {
-        return mtech_coursedog_error('generate_api_token__error_2', 'Empty response body');
+        return mtech_coursedog_error('generate_api_token__error_3', 'Empty response body');
     }
 
     $data = json_decode($body, true);
     if (!isset($data['token'])) {
-        return mtech_coursedog_error('generate_api_token__error_3', 'No token in response');
+        return mtech_coursedog_error('generate_api_token__error_4', 'No token in response');
     }
 
     $encrypted_token = mtech_coursedog_encrypt_data($data['token']);
