@@ -41,5 +41,12 @@ The MTECH Coursedog settings page allows for the following configurations:
 This value corresponds to the program_slug value in the shortcode instances.
 
 #### Coursedog Program ID
-When a "Coursedog Program ID" value is set for a program, the Coursedog API is queried for that exact program.
-This value can be found by querying the Coursedog Curriculum API for all programs.
+When there is no Program ID value set, the plugin queries the API by search, using the program's name as the query.
+```
+http://api/v1/cm/schoolId/programs/search/searchQuery
+```
+When a Program ID value is set, the plugin will query the API for a program with that exact ID.
+```
+http://api/v1/cm/schoolId/programs/programId
+```
+Program ID values can be found by querying the Coursedog Curriculum API for all programs.
