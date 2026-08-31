@@ -18,7 +18,9 @@
 - Cache layer - field value
 - Delete shortcode transient button in dashboard
 - Add prereqs formatter
-- Add handler for materials and supplies for the MTECH Store page <
+- Add handler for materials and supplies for the MTECH Store page
+- Move api.php url variables to database/dashboard <
+- Ensure API tokens can only be generated on prod
 
 - Add in PROD check in mtech_coursedog_generate_api_token() in api.php
 - https://www.youtube.com/watch?v=jXp5D5ZnxGM
