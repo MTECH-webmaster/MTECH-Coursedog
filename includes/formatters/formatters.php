@@ -8,6 +8,7 @@ require_once __DIR__ . '/format-length.php';
 require_once __DIR__ . '/format-certs.php';
 require_once __DIR__ . '/format-registration.php';
 require_once __DIR__ . '/format-prereqs.php';
+require_once __DIR__ . '/format-materials.php';
 
 function mtech_coursedog_get_formatters() {
     return array(
@@ -18,6 +19,8 @@ function mtech_coursedog_get_formatters() {
         'registration_range' => 'mtech_coursedog_format_registration_range',
         'registration_table' => 'mtech_coursedog_format_registration_table',
         'prereqs' => 'mtech_coursedog_format_prereqs',
+        'materials_required' => 'mtech_coursedog_format_materials_required',
+        'materials_optional' => 'mtech_coursedog_format_materials_optional',
     );
 }
 
