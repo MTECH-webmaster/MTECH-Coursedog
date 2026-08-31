@@ -4,7 +4,10 @@ if (!defined('ABSPATH')) {
 }
 
 function mtech_coursedog_generate_api_token() {
-    $api_auth_url = "https://app.coursedog.com/api/v1/sessions";
+    $api_auth_url = defined('MTECH_COURSEDOG_API_AUTH_URL') ? MTECH_COURSEDOG_API_AUTH_URL : '';
+    if (empty($api_auth_url)) {
+        return mtech_coursedog_error('generate_api_token__error_0', 'API auth URL not defined');
+    }
 
     // Temporary: restrict token generation to production only
     // if (!defined('DB_NAME') || DB_NAME !== 'wp_mtec1') {
@@ -128,7 +131,10 @@ function mtech_coursedog_run_scheduled_token_generation() {
 }
 
 function mtech_coursedog_search_and_fetch_program_data($search_query, $effective_dates_range, $token) {
-    $api_base_url = 'https://app.coursedog.com/api/v1/cm/mtech';
+    $api_base_url = defined('MTECH_COURSEDOG_API_BASE_URL') ? MTECH_COURSEDOG_API_BASE_URL : '';
+    if (empty($api_base_url)) {
+        return mtech_coursedog_error('search_and_fetch_program_data__error_0', 'API base URL not defined');
+    }
 
     $api_url = trailingslashit($api_base_url) . 'programs/search/' . rawurlencode($search_query) . '?effectiveDatesRange=' . $effective_dates_range;
     date_default_timezone_set('America/Denver');
@@ -172,7 +178,11 @@ function mtech_coursedog_search_and_fetch_program_data($search_query, $effective
 }
 
 function mtech_coursedog_fetch_program_data_by_id($program_id, $token) {
-    $api_base_url = 'https://app.coursedog.com/api/v1/cm/mtech';
+    $api_base_url = defined('MTECH_COURSEDOG_API_BASE_URL') ? MTECH_COURSEDOG_API_BASE_URL : '';
+    if (empty($api_base_url)) {
+        return mtech_coursedog_error('mtech_coursedog_fetch_program_data_by_id__error_0', 'API base URL not defined');
+    }
+
     $api_url = trailingslashit($api_base_url) . 'programs/' . $program_id;
     date_default_timezone_set('America/Denver');
 
