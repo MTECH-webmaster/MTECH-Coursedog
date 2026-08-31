@@ -14,10 +14,11 @@
 - Second API call function - program ID
 - Add program edit option in dashboard
 - Cache layer - raw program data
-- Formatter - Cost
+- Add cost formatter
 - Cache layer - field value
-- Delete shortcode transient button in dashboard <
-- Add handler for materials and supplies for the MTECH Store page
+- Delete shortcode transient button in dashboard
+- Add prereqs formatter
+- Add handler for materials and supplies for the MTECH Store page <
 
 - Add in PROD check in mtech_coursedog_generate_api_token() in api.php
 - https://www.youtube.com/watch?v=jXp5D5ZnxGM
