@@ -22,13 +22,13 @@ In the following example, "electrical" is the program slug set in the dashboard 
 
 [mtech-coursedog program_slug="electrical" type="cost"]
 
-## Settings page
+## Settings
 
-The MTECH Coursedog settings page allows for configurations in the following tabs:
+The MTECH Coursedog settings page allows for the following configurations:
 
 ### API tab
 
-- Setting API credentials (a Coursedog username and password for an account with API access).
+- Setting API credentials (a username and password for a Coursedog account with API access).
 
 ### Shortcodes tab
 
