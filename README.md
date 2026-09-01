@@ -50,3 +50,6 @@ When a Program ID value is set, the plugin will query the API for a program with
 http://api/v1/cm/schoolId/programs/programId
 ```
 Program ID values can be found by querying the Coursedog Curriculum API for all programs.
+```
+http://api/v1/cm/schoolId/programs?limit=50
+```
