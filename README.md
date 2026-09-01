@@ -40,6 +40,8 @@ The MTECH Coursedog settings page allows for the following configurations:
 
 This value corresponds to the program_slug value in the shortcode instances.
 
+![Screenshot of the MTECH Coursedog dashboard showing Electrical Apprenticeship config fields](/docs/dashboard-example.png)
+
 #### Coursedog Program ID
 When there is no Program ID value set, the plugin queries the API by search, using the program's name as the query.
 ```
