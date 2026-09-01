@@ -1,6 +1,6 @@
 ﻿# MTECH Coursedog
 
-The MTECH Coursedog plugin provides an interface with the Coursedog Curriculum API.
+The MTECH Coursedog plugin provides a shortcode interface with the Coursedog Curriculum API.
 
 ## Shortcodes
 
