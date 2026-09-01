@@ -19,8 +19,9 @@ The MTECH Coursedog plugin provides a shortcode interface with the Coursedog Cur
 ### Example usage
 
 In the following example, "electrical" is the program slug set in the dashboard and "cost" is the shortcode type:
-
+```
 [mtech-coursedog program_slug="electrical" type="cost"]
+```
 
 ## Settings
 
