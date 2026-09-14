@@ -69,6 +69,63 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                             <?php wp_nonce_field('mtech_coursedog_remove_program_' . $program->id, 'mtech_coursedog_remove_program_nonce'); ?>
                             <button type="submit" class="button-link mtech-remove-program-link">Remove Program</button>
                         </form>
+
+                        <!-- Duplicate Program Button -->
+                        <button type="button" 
+                                    class="button-link mtech-remove-program-link" 
+                                    onclick="document.getElementById('mtech-modal-<?php echo esc_attr($program->id); ?>').showModal();">
+                                Duplicate
+                        </button>
+
+                        <!-- Duplicate Program Modal -->
+                        <dialog id="mtech-modal-<?php echo esc_attr($program->id); ?>" class="mtech-custom-modal">
+                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-program-form-delete" onsubmit="return confirm('Are you sure you want to duplicate this program?');">
+                                <input type="hidden" name="action" value="mtech_coursedog_duplicate_program">
+                                <input type="hidden" name="school_id" value="<?php echo esc_attr($school->id); ?>">
+                                <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
+                                <?php wp_nonce_field('mtech_coursedog_duplicate_program_' . $program->id, 'mtech_coursedog_duplicate_program_nonce'); ?>
+
+                                <p>
+                                    <label>
+                                        Program Name<br>
+                                        <input type="text" name="name" value="" required>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        Program Slug<span class="mtech-optional">(letters, numbers, hyphens only)</span><br>
+                                        <input type="text" name="slug" value="" required>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        Coursedog Program ID <span class="mtech-optional">(optional)</span><br>
+                                        <input type="text" name="coursedog_program_id" value="">
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        Search <span class="mtech-optional">(optional)</span><br>
+                                        <input type="checkbox" name="search" value="">
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        Search Query <span class="mtech-optional"></span><br>
+                                        <input type="text" name="search_query" value="">
+                                    </label>
+                                </p>
+
+                                <p>
+                                    <label>
+                                        Effective Dates Range<br>
+                                        <input type="text" name="effective_dates_range" value="">
+                                    </label>
+                                </p>
+
+                                <button type="submit" class="button-link mtech-remove-program-link">Duplicate</button>
+                            </form>
+                        </dialog>
                     </div>
                     
                     <ul class="mtech-nested">
