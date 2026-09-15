@@ -220,6 +220,134 @@ function mtech_coursedog_add_program_handler() {
 }
 add_action('admin_post_mtech_coursedog_add_program', 'mtech_coursedog_add_program_handler');
 
+function mtech_coursedog_duplicate_program_handler() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized', 403);
+    }
+
+    // school_id and program_id of program being duplicated
+    $school_id = isset($_POST['school_id']) ? absint($_POST['school_id']) : 0;
+    $program_id = isset($_POST['program_id']) ? absint($_POST['program_id']) : 0;
+
+    if (!$school_id || !$program_id || !isset($_POST['mtech_coursedog_duplicate_program_nonce']) ||
+        !wp_verify_nonce($_POST['mtech_coursedog_duplicate_program_nonce'], 'mtech_coursedog_duplicate_program_' . $program_id)) {
+        wp_die('Invalid request', 400);
+    }
+
+    // DB tables
+    global $wpdb;
+    $table_schools  = $wpdb->prefix . 'mtech_coursedog_schools';
+    $table_programs = $wpdb->prefix . 'mtech_coursedog_programs';
+
+    // Confirm the school actually exists before attaching a program to it
+    $school_exists = $wpdb->get_var(
+        $wpdb->prepare("SELECT id FROM $table_schools WHERE id = %d", $school_id)
+    );
+    if (!$school_exists) {
+        wp_die('Invalid school', 400);
+    }
+
+    // name, slug, and coursedog_program_id for new program
+    $name = isset($_POST['name']) ? sanitize_text_field($_POST['name']) : '';
+    if ($name === '') {
+        wp_die('Program name is required', 400);
+    }
+
+    $slug = isset($_POST['slug']) ? mtech_coursedog_sanitize_program_slug($_POST['slug']) : '';
+    if ($slug === '') {
+        wp_die('A valid program slug is required', 400);
+    }
+
+    $duplicate_slug = $wpdb->get_var(
+        $wpdb->prepare("SELECT id FROM $table_programs WHERE slug = %s", $slug)
+    );
+    if ($duplicate_slug) {
+        wp_die('This slug is already in use by another program.', 400);
+    }
+
+    $coursedog_program_id = isset($_POST['coursedog_program_id']) ? sanitize_text_field($_POST['coursedog_program_id']) : '';
+
+    // search, search_query, and effective_dates_range for new program's shortcodes
+    $search = !empty($_POST['search']) ? 1 : 0;
+    $search_query = isset($_POST['search_query']) ? sanitize_text_field($_POST['search_query']) : '';
+    $effective_dates_range = isset($_POST['effective_dates_range']) ? sanitize_text_field($_POST['effective_dates_range']) : '';
+
+
+    /////////////////////////////
+    //  START ADD NEW PROGRAM  //
+    /////////////////////////////
+
+    // assemble data for new program row and insert it into the DB
+    $data = array(
+        'school_id' => $school_id,
+        'name'      => $name,
+        'slug'      => $slug,
+        'coursedog_program_id' => $coursedog_program_id !== '' ? $coursedog_program_id : null,
+    );
+    $formats = array('%d', '%s', '%s', $coursedog_program_id !== '' ? '%s' : null);
+
+    $result = $wpdb->insert($table_programs, $data, $formats);
+
+    if ($result === false) {
+        wp_die('Database error while adding program.', 500);
+    }
+
+    // Get the ID of the newly inserted program row
+    $new_program_id = $wpdb->insert_id;
+
+    ///////////////////////////
+    //  END ADD NEW PROGRAM  //
+    ///////////////////////////
+
+    //////////////////////////////////
+    //  START DUPLICATE SHORTCODES  //
+    //////////////////////////////////
+
+    $table_shortcodes = $wpdb->prefix . 'mtech_coursedog_shortcodes';
+
+    $shortcode_rows = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT id, type, field, search, search_query, effective_dates_range
+                FROM $table_shortcodes
+                WHERE program_id = %d
+                ORDER BY type ASC",
+            $program_id
+        )
+    );
+
+    foreach($shortcode_rows as $row) {
+        $data = array(
+            'program_id' => $new_program_id,
+            'type' => $row->type,
+            'field' => $row->field,
+            'search' => $search,
+            'search_query' => $search_query,
+            'effective_dates_range' => $effective_dates_range,
+        );
+        $formats = array('%d', '%s', '%s', '%d', '%s', '%s');
+
+        $result = $wpdb->insert($table_shortcodes, $data, $formats);
+
+        if ($result === false) {
+            wp_die('Database error while duplicating shortcodes.', 500);
+        }
+    }
+
+    ////////////////////////////////
+    //  END DUPLICATE SHORTCODES  //
+    ////////////////////////////////
+
+    $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
+    $redirect = add_query_arg(
+        'mtech_program_added', '1',
+        remove_query_arg(array('mtech_saved', 'mtech_deleted', 'mtech_program_added', 'mtech_program_removed'), $redirect)
+    );
+
+    wp_safe_redirect($redirect);
+    exit;
+}
+add_action('admin_post_mtech_coursedog_duplicate_program', 'mtech_coursedog_duplicate_program_handler');
+
 function mtech_coursedog_remove_program_handler() {
     if (!current_user_can('manage_options')) {
         wp_die('Unauthorized', 403);
