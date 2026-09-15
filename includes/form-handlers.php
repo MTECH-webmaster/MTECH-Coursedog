@@ -268,7 +268,7 @@ function mtech_coursedog_duplicate_program_handler() {
     $coursedog_program_id = isset($_POST['coursedog_program_id']) ? sanitize_text_field($_POST['coursedog_program_id']) : '';
 
     // search, search_query, and effective_dates_range for new program's shortcodes
-    $search = isset($_POST['search']) ? 1 : 0;
+    $search = !empty($_POST['search']) ? 1 : 0;
     $search_query = isset($_POST['search_query']) ? sanitize_text_field($_POST['search_query']) : '';
     $effective_dates_range = isset($_POST['effective_dates_range']) ? sanitize_text_field($_POST['effective_dates_range']) : '';
 
