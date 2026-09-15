@@ -106,7 +106,7 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 <p>
                                     <label>
                                         Search <span class="mtech-optional">(optional)</span><br>
-                                        <input type="checkbox" name="search" value="">
+                                        <input type="checkbox" name="search" value="1">
                                     </label>
                                 </p>
                                 <p>
