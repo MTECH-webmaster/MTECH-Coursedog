@@ -79,7 +79,7 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
 
                         <!-- Duplicate Program Modal -->
                         <dialog id="mtech-modal-<?php echo esc_attr($program->id); ?>" class="mtech-custom-modal">
-                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-program-form-delete" onsubmit="return confirm('Are you sure you want to duplicate this program?');">
+                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-program-form-delete">
                                 <input type="hidden" name="action" value="mtech_coursedog_duplicate_program">
                                 <input type="hidden" name="school_id" value="<?php echo esc_attr($school->id); ?>">
                                 <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
