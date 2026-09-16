@@ -87,6 +87,106 @@ function mtech_coursedog_save_shortcode_handler() {
 }
 add_action('admin_post_mtech_coursedog_save_shortcode', 'mtech_coursedog_save_shortcode_handler');
 
+function mtech_coursedog_save_shortcodes_bulk_handler() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Unauthorized', 403);
+    }
+
+    $program_id = isset($_POST['program_id']) ? absint($_POST['program_id']) : 0;
+
+    if (!$program_id || !isset($_POST['mtech_coursedog_bulk_nonce']) ||
+        !wp_verify_nonce($_POST['mtech_coursedog_bulk_nonce'], 'mtech_coursedog_save_shortcodes_bulk_' . $program_id)) {
+        wp_die('Invalid request', 400);
+    }
+
+    global $wpdb;
+    $table_programs   = $wpdb->prefix . 'mtech_coursedog_programs';
+    $table_shortcodes = $wpdb->prefix . 'mtech_coursedog_shortcodes';
+
+    $program_exists = $wpdb->get_var(
+        $wpdb->prepare("SELECT id FROM $table_programs WHERE id = %d", $program_id)
+    );
+    if (!$program_exists) {
+        wp_die('Invalid program', 400);
+    }
+
+    $submitted = isset($_POST['shortcodes']) && is_array($_POST['shortcodes']) ? $_POST['shortcodes'] : array();
+
+    if (empty($submitted)) {
+        // Nothing submitted — treat as a no-op rather than an error
+        // mtech_coursedog_redirect_with_flag('mtech_saved');
+    }
+
+    // Fetch the IDs actually belonging to this program, so a tampered POST
+    // can't update another program's shortcode rows
+    $owned_ids = $wpdb->get_col(
+        $wpdb->prepare("SELECT id FROM $table_shortcodes WHERE program_id = %d", $program_id)
+    );
+    $owned_ids = array_map('absint', $owned_ids);
+
+    // Validate everything before writing anything
+    $updates = array();
+    $seen_types = array();
+
+    foreach ($submitted as $row) {
+        $shortcode_id = isset($row['id']) ? absint($row['id']) : 0;
+
+        if (!$shortcode_id || !in_array($shortcode_id, $owned_ids, true)) {
+            wp_die('Invalid shortcode reference', 400);
+        }
+
+        $type  = isset($row['type']) ? sanitize_text_field($row['type']) : '';
+        $field = isset($row['field']) ? sanitize_text_field($row['field']) : '';
+
+        if ($type === '' || $field === '') {
+            wp_die('Type and Field are required for every shortcode.', 400);
+        }
+
+        // The (program_id, type) unique key means two rows in this same
+        // submission can't both claim the same type
+        if (in_array($type, $seen_types, true)) {
+            wp_die('Duplicate type "' . esc_html($type) . '" — each shortcode type must be unique within a program.', 400);
+        }
+        $seen_types[] = $type;
+
+        $updates[$shortcode_id] = array(
+            'type'                  => $type,
+            'field'                 => $field,
+            'search'                => !empty($row['search']) ? 1 : 0,
+            'search_query'          => isset($row['search_query']) ? sanitize_text_field($row['search_query']) : '',
+            'effective_dates_range' => isset($row['effective_dates_range']) ? sanitize_text_field($row['effective_dates_range']) : '',
+        );
+    }
+
+    $formats = array('%s', '%s', '%d', '%s', '%s');
+
+    $wpdb->query('START TRANSACTION');
+
+    foreach ($updates as $shortcode_id => $data) {
+        $result = $wpdb->update(
+            $table_shortcodes,
+            $data,
+            array('id' => $shortcode_id),
+            $formats,
+            array('%d')
+        );
+
+        if ($result === false) {
+            $wpdb->query('ROLLBACK');
+            wp_die('Database error while saving shortcodes.', 500);
+        }
+    }
+
+    $wpdb->query('COMMIT');
+
+    $redirect = wp_get_referer() ? wp_get_referer() : admin_url('options-general.php?page=mtech-coursedog');
+    $redirect = add_query_arg('mtech_saved', '1', remove_query_arg(array('mtech_saved', 'mtech_deleted', 'mtech_program_added', 'mtech_program_removed', 'mtech_program_updated'), $redirect));
+
+    wp_safe_redirect($redirect);
+    exit;
+}
+add_action('admin_post_mtech_coursedog_save_shortcodes_bulk', 'mtech_coursedog_save_shortcodes_bulk_handler');
+
 function mtech_coursedog_delete_shortcode_transient_handler() {
     if (!current_user_can('manage_options')) {
         wp_die('Unauthorized', 403);
