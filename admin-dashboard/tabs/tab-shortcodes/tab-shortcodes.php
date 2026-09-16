@@ -111,7 +111,7 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 </p>
                                 <p>
                                     <label>
-                                        Search Query <span class="mtech-optional"></span><br>
+                                        Search Query <span class="mtech-optional">(use normal spaces, not %20)</span><br>
                                         <input type="text" name="search_query" value="">
                                     </label>
                                 </p>
@@ -187,7 +187,7 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                     </p>
                                     <p>
                                         <label>
-                                            Search Query<br>
+                                            Search Query <span class="mtech-optional">(use normal spaces, not %20)</span><br>
                                             <input type="text" name="search_query" value="<?php echo esc_attr($shortcode->search_query); ?>">
                                         </label>
                                     </p>
@@ -251,7 +251,7 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 </p>
                                 <p>
                                     <label>
-                                        Search Query<br>
+                                        Search Query <span class="mtech-optional">(use normal spaces, not %20)</span><br>
                                         <input type="text" name="search_query" value="">
                                     </label>
                                 </p>
