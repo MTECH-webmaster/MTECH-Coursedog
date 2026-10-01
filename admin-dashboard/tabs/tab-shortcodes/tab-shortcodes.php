@@ -88,38 +88,38 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 <p>
                                     <label>
                                         Program Name<br>
-                                        <input type="text" name="name" value="" required>
+                                        <input class="mtech-shortcode-input-margin-top" type="text" name="name" value="" required>
                                     </label>
                                 </p>
                                 <p>
                                     <label>
                                         Program Slug<span class="mtech-optional">(letters, numbers, hyphens only)</span><br>
-                                        <input type="text" name="slug" value="" required>
+                                        <input class="mtech-shortcode-input-margin-top" type="text" name="slug" value="" required>
                                     </label>
                                 </p>
                                 <p>
                                     <label>
                                         Coursedog Program ID <span class="mtech-optional">(optional)</span><br>
-                                        <input type="text" name="coursedog_program_id" value="">
+                                        <input class="mtech-shortcode-input-margin-top" type="text" name="coursedog_program_id" value="">
                                     </label>
                                 </p>
                                 <p>
                                     <label>
                                         Search <span class="mtech-optional">(optional)</span><br>
-                                        <input type="checkbox" name="search" value="1">
+                                        <input class="mtech-shortcode-input-margin-top" type="checkbox" name="search" value="1">
                                     </label>
                                 </p>
                                 <p>
                                     <label>
                                         Search Query <span class="mtech-optional">(use spaces, not %20)</span><br>
-                                        <input type="text" name="search_query" value="">
+                                        <input class="mtech-shortcode-input-margin-top" type="text" name="search_query" value="">
                                     </label>
                                 </p>
 
                                 <p>
                                     <label>
                                         Effective Dates Range<br>
-                                        <input type="text" name="effective_dates_range" value="">
+                                        <input class="mtech-shortcode-input-margin-top" type="text" name="effective_dates_range" value="">
                                     </label>
                                 </p>
 
@@ -144,31 +144,31 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                         <p>
                                             <label>
                                                 Type<br>
-                                                <input type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][type]" value="<?php echo esc_attr($shortcode->type); ?>">
+                                                <input class="mtech-shortcode-input-margin-top" type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][type]" value="<?php echo esc_attr($shortcode->type); ?>">
                                             </label>
                                         </p>
                                         <p>
                                             <label>
                                                 Field<br>
-                                                <input type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][field]" value="<?php echo esc_attr($shortcode->field); ?>">
+                                                <input class="mtech-shortcode-input-margin-top" type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][field]" value="<?php echo esc_attr($shortcode->field); ?>">
                                             </label>
                                         </p>
                                         <p class="mtech-checkbox-field">
                                             <label>
-                                                <input type="checkbox" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][search]" value="1" <?php checked((bool) $shortcode->search, true); ?>>
+                                                <input class="mtech-shortcode-input-margin-top" type="checkbox" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][search]" value="1" <?php checked((bool) $shortcode->search, true); ?>>
                                                 Search
                                             </label>
                                         </p>
                                         <p>
                                             <label>
                                                 Search Query <span class="mtech-optional">(use spaces, not %20)</span><br>
-                                                <input type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][search_query]" value="<?php echo esc_attr($shortcode->search_query); ?>">
+                                                <input class="mtech-shortcode-input-margin-top" type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][search_query]" value="<?php echo esc_attr($shortcode->search_query); ?>">
                                             </label>
                                         </p>
                                         <p>
                                             <label>
                                                 Effective Dates Range<br>
-                                                <input type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][effective_dates_range]" value="<?php echo esc_attr($shortcode->effective_dates_range); ?>">
+                                                <input class="mtech-shortcode-input-margin-top" type="text" name="shortcodes[<?php echo esc_attr($shortcode->id); ?>][effective_dates_range]" value="<?php echo esc_attr($shortcode->effective_dates_range); ?>">
                                             </label>
                                         </p>
                                     </div>
@@ -182,27 +182,31 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                             </form>
 
                             <!-- Per-row delete / delete-transient actions, outside the bulk form -->
-                            <?php foreach ($shortcode_rows as $shortcode) : ?>
-                                <div class="mtech-shortcode-row-actions">
-                                    <span class="mtech-row-actions-label"><?php echo esc_html($shortcode->type); ?></span>
+                            <div class="mtech-shortcode-row-actions-wrapper">
+                                <?php foreach ($shortcode_rows as $shortcode) : ?>
+                                    <div class="mtech-shortcode-row-actions">
+                                        <span class="mtech-row-actions-label"><?php echo esc_html($shortcode->type); ?></span>
 
-                                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form-delete">
-                                        <input type="hidden" name="action" value="mtech_coursedog_delete_shortcode_transient">
-                                        <input type="hidden" name="program_slug" value="<?php echo esc_attr($program->slug); ?>">
-                                        <input type="hidden" name="shortcode_type" value="<?php echo esc_attr($shortcode->type); ?>">
-                                        <?php wp_nonce_field('mtech_coursedog_delete_shortcode_transient_' . $program->slug . $shortcode->type, 'mtech_coursedog_delete_nonce'); ?>
-                                        <button type="submit" class="button button-secondary">Delete Transient</button>
-                                    </form>
+                                        <div class="mtech-shortcode-row-actions-forms">
+                                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form-delete">
+                                                <input type="hidden" name="action" value="mtech_coursedog_delete_shortcode_transient">
+                                                <input type="hidden" name="program_slug" value="<?php echo esc_attr($program->slug); ?>">
+                                                <input type="hidden" name="shortcode_type" value="<?php echo esc_attr($shortcode->type); ?>">
+                                                <?php wp_nonce_field('mtech_coursedog_delete_shortcode_transient_' . $program->slug . $shortcode->type, 'mtech_coursedog_delete_nonce'); ?>
+                                                <button type="submit" class="button button-secondary mtech-shortcode-input-margin-top">Delete Transient</button>
+                                            </form>
 
-                                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form-delete" onsubmit="return confirm('Delete this shortcode? This cannot be undone.');">
-                                        <input type="hidden" name="action" value="mtech_coursedog_delete_shortcode">
-                                        <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
-                                        <input type="hidden" name="shortcode_id" value="<?php echo esc_attr($shortcode->id); ?>">
-                                        <?php wp_nonce_field('mtech_coursedog_delete_shortcode_' . $shortcode->id, 'mtech_coursedog_delete_nonce'); ?>
-                                        <button type="submit" class="button button-secondary">Delete</button>
-                                    </form>
-                                </div>
-                            <?php endforeach; ?>
+                                            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mtech-shortcode-form-delete" onsubmit="return confirm('Delete this shortcode? This cannot be undone.');">
+                                                <input type="hidden" name="action" value="mtech_coursedog_delete_shortcode">
+                                                <input type="hidden" name="program_id" value="<?php echo esc_attr($program->id); ?>">
+                                                <input type="hidden" name="shortcode_id" value="<?php echo esc_attr($shortcode->id); ?>">
+                                                <?php wp_nonce_field('mtech_coursedog_delete_shortcode_' . $shortcode->id, 'mtech_coursedog_delete_nonce'); ?>
+                                                <button type="submit" class="button button-secondary mtech-shortcode-input-margin-top">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
 
 
                         <!-- Add new shortcode for this program -->
@@ -216,31 +220,31 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                     <p>
                                         <label>
                                             Type<br>
-                                            <input type="text" name="type" value="">
+                                            <input class="mtech-shortcode-input-margin-top" type="text" name="type" value="">
                                         </label>
                                     </p>
                                     <p>
                                         <label>
                                             Field<br>
-                                            <input type="text" name="field" value="">
+                                            <input class="mtech-shortcode-input-margin-top" type="text" name="field" value="">
                                         </label>
                                     </p>
                                     <p>
                                         <label>
-                                            <input type="checkbox" name="search" value="1">
+                                            <input class="mtech-shortcode-input-margin-top" type="checkbox" name="search" value="1">
                                             Search
                                         </label>
                                     </p>
                                     <p>
                                         <label>
                                             Search Query <span class="mtech-optional">(use spaces, not %20)</span><br>
-                                            <input type="text" name="search_query" value="">
+                                            <input class="mtech-shortcode-input-margin-top" type="text" name="search_query" value="">
                                         </label>
                                     </p>
                                     <p>
                                         <label>
                                             Effective Dates Range<br>
-                                            <input type="text" name="effective_dates_range" value="">
+                                            <input class="mtech-shortcode-input-margin-top" type="text" name="effective_dates_range" value="">
                                         </label>
                                     </p>
                                     <p>
@@ -266,19 +270,19 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                     <p>
                         <label>
                             Program Name<br>
-                            <input type="text" name="name" value="" required>
+                            <input class="mtech-shortcode-input-margin-top" type="text" name="name" value="" required>
                         </label>
                     </p>
                     <p>
                         <label>
                             Program Slug<span class="mtech-optional">(letters, numbers, hyphens only)</span><br>
-                            <input type="text" name="slug" value="" required>
+                            <input class="mtech-shortcode-input-margin-top" type="text" name="slug" value="" required>
                         </label>
                     </p>
                     <p>
                         <label>
                             Coursedog Program ID <span class="mtech-optional">(optional)</span><br>
-                            <input type="text" name="coursedog_program_id" value="">
+                            <input class="mtech-shortcode-input-margin-top" type="text" name="coursedog_program_id" value="">
                         </label>
                     </p>
                     <p>
