@@ -15,6 +15,12 @@ function mtech_coursedog_set_program_blob_transient($program_slug, $blob_program
     set_transient($blob_transient_name, $blob_program_data, 7200);
 }
 
+function mtech_coursedog_delete_program_blob_transient($program_slug) {
+    $blob_transient_name = $program_slug . "_blob";
+    $was_deleted = delete_transient($blob_transient_name);
+    return $was_deleted;
+}
+
 function mtech_coursedog_get_shortcode_transient($program_slug, $type) {
     $shortcode_transient_name = $program_slug . $type;
     $transient = get_transient($shortcode_transient_name);
@@ -29,5 +35,11 @@ function mtech_coursedog_set_shortcode_transient($program_slug, $type, $field_da
 function mtech_coursedog_delete_shortcode_transient($program_slug, $type) {
     $shortcode_transient_name = $program_slug . $type;
     $was_deleted = delete_transient($shortcode_transient_name);
+
+    // The blob transient holds the raw program data the shortcode was formatted from.
+    // Clearing it ensures the next render refetches from the Coursedog API instead of
+    // rebuilding the shortcode transient from stale data.
+    mtech_coursedog_delete_program_blob_transient($program_slug);
+
     return $was_deleted;
 }
