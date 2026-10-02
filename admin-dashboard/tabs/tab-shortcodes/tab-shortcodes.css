@@ -74,7 +74,7 @@
 /* Each shortcode row: save form + delete form sit side by side */
 #mtech-coursedog-tree > li > ul.mtech-nested > li > ul.mtech-nested > li {
     display: flex;
-    align-items: flex-end;
+    /* align-items: flex-end; */
     gap: 12px;
     padding: 14px 0;
     border-bottom: 1px solid #e2e4e7;
@@ -332,4 +332,49 @@
     text-transform: none;
     letter-spacing: normal;
     color: #a7aaad;
+}
+
+
+
+/* Styling for the bulk edit additions */
+
+.mtech-bulk-edit-section {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.mtech-shortcode-row {
+    display: flex;
+    column-gap: 20px;
+}
+
+.mtech-shortcode-row-actions-wrapper {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 20px;
+}
+
+.mtech-shortcode-row-actions {
+    min-width: 300px;
+}
+
+.mtech-shortcode-row-actions-forms {
+    min-width: 300px;
+    display: flex;
+    margin-top: 10px;
+}
+
+.mtech-shortcode-row-actions form {
+    width: 130px;
+}
+
+.mtech-shortcode-input-margin-top {
+    margin-top: 10px;
+}
+
+.mtech-checkbox-field {
+    display: flex;
+    align-items: center;
 }
