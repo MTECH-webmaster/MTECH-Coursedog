@@ -177,6 +177,7 @@ $schools = $wpdb->get_results("SELECT id, name FROM $table_schools ORDER BY name
                                 <?php if (!empty($shortcode_rows)) : ?>
                                     <p class="mtech-bulk-save-row">
                                         <button type="submit" class="button button-primary">Save All Shortcodes</button>
+                                        <span>(Program slug: <?php echo esc_attr($program->slug); ?>)</span>
                                     </p>
                                 <?php endif; ?>
                             </form>
